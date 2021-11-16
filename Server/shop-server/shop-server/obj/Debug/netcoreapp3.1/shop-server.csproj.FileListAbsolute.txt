@@ -18,3 +18,16 @@ D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\obj\Debug\ne
 D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\obj\Debug\netcoreapp3.1\shop-server.dll
 D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\obj\Debug\netcoreapp3.1\shop-server.pdb
 D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\obj\Debug\netcoreapp3.1\shop-server.genruntimeconfig.cache
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\EntityFramework.SqlServer.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\EntityFramework.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\System.CodeDom.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\System.Configuration.ConfigurationManager.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\System.Data.SqlClient.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\sni.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\sni.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\sni.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\obj\Debug\netcoreapp3.1\shop-server.csproj.CopyComplete
