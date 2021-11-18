@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,6 +15,21 @@ namespace shop_server.Model
         public int Price { get; set; }
 
         public CommodityImage CommodityImage { get; set; }
+
+        //同時屬於 Store , BuyList
+        public int BuyId { get; set; }
+        [ForeignKey("BuyId")]
+        public virtual BuyList BuyList { get; set; }
+
+        public int StoreId { get; set; }
+        [ForeignKey("StoreId")]
+        public virtual Store Store { get; set; }
+
+
+
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
+
     }
 
     public class CommodityImage
