@@ -22,7 +22,7 @@ namespace shop_server.Controllers
 
         }
 
-        // GET: api/Customs
+        // GET: api/User
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUser()
         {
@@ -92,8 +92,8 @@ namespace shop_server.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            //Create myCustom to insert
-
+            //加上Create Date
+            user.CreatedDate = DateTime.Now;
             _context.Users.Add(user);
 
             await _context.SaveChangesAsync();
