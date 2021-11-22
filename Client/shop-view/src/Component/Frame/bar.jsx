@@ -79,24 +79,25 @@ export default function PrimarySearchAppBar() {
   const [state, setState] = React.useState(false);
 
   const transPage = (page) => {
+    console.log(page)
     switch (page) {
       case '我的賣場':
-        document.location.href = "/";
+        document.location.href = "/MyStore";
         break;
       case '我的購物車':
-        document.location.href = "/learnVocabulary";
+        document.location.href = "/MyBuyList";
         break;
       case '關注的賣場':
-        document.location.href = "/myVocabulary";
+        document.location.href = "/FocusStore";
         break;
       case '交易歷史紀錄':
-        document.location.href = "/myPlan";
+        document.location.href = "/TransHistory";
         break;
       case '個人資料':
-        document.location.href = "/articles";
+        document.location.href = "/UserInformation";
         break;
       case 'Line Bot資訊':
-        document.location.href = "/";
+        document.location.href = "/LineBotInformation";
         break;
       case '登出帳號':
         break;
@@ -130,7 +131,7 @@ export default function PrimarySearchAppBar() {
       <Divider />
       <List>
         {['個人資料', 'Line Bot資訊', '登出帳號'].map((text, index) => (
-          <ListItem button key={text}>
+          <ListItem button key={text} onClick={() => transPage(text)}>
             <ListItemIcon>
               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
             </ListItemIcon>
