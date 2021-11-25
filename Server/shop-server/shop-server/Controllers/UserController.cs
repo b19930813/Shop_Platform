@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using shop_server.Entities;
 using shop_server.Model;
+using shop_server.Presenters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +15,14 @@ namespace shop_server.Controllers
     [ApiController]
     public class UserController : Controller
     {
+        private User LoginUser { get; set; }
 
         private readonly ShopContext _context;
-
+        Member member;
         public UserController(ShopContext context)
         {
             _context = context;
-
+            member = new Member(context);
         }
 
         // GET: api/User
@@ -42,7 +45,7 @@ namespace shop_server.Controllers
             return user;
         }
 
-        //刪除使用者資料
+        //Delete User Information by user 
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(int UserId)
         {
@@ -58,14 +61,17 @@ namespace shop_server.Controllers
             return user;
         }
 
-        //修改使用者資料
+        // Update User Information
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUesr(int UserId , User user) 
+        public async Task<IActionResult> PutUesr(int UserId, User user)
         {
-             if(UserId != user.UserId)
+            if (UserId != user.UserId)
             {
                 return BadRequest();
             }
+
+            //Update UpdateDate
+            user.UpdatedDate = DateTime.Now;
 
             _context.Entry(user).State = EntityState.Modified;
 
@@ -84,11 +90,14 @@ namespace shop_server.Controllers
                     throw;
                 }
             }
-
             return NoContent();
         }
 
-
+        /// <summary>
+        /// Admin Create User To Database 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
@@ -101,6 +110,102 @@ namespace shop_server.Controllers
             return CreatedAtAction("PostUser", new { id = user.UserId }, user);
         }
 
+        /// <summary>
+        /// User Register Information
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="SecondPassword"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<User>> Regiest(User user, string SecondPassword)
+        {
+            if (user.Password == SecondPassword)
+            {
+                user.CreatedDate = DateTime.Now;
+                _context.Users.Add(user);
+
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("PostUser", new { id = user.UserId }, user);
+            }
+            else
+            {
+                //輸入的密碼跟二次密碼不同
+                return BadRequest();
+            }
+        }
+
+        /// <summary>
+        /// User Login
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <param name="Password"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> Login(string Account, string Password)
+        {
+            //Find User 
+
+            User FindUser = _context.Users.SingleOrDefault(user => user.Account == Account);
+
+            if(FindUser != null)
+            {
+                //Check Password 
+                if(FindUser.Password == Password)
+                {
+                    //Record Login Information 
+                    RecordLoginInformation(FindUser);
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+            //return result;
+        }
+
+        /// <summary>
+        /// User Logout 
+        /// </summary>
+        /// <param name="Account"></param>
+        /// <returns></returns>
+        [HttpPost] 
+        public async Task<IActionResult> LogOut(string Account)
+        {
+            //Check front end send user information 
+            if(LoginUser.Account == Account)
+            {
+                //Clear User Information
+                LoginUser = null;
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        /// <summary>
+        /// Save User Login Information
+        /// </summary>
+        /// <param name="findUser"></param>
+        private void RecordLoginInformation(User findUser)
+        {
+            LoginUser = findUser;
+        }
+
+
+
+
+        /// <summary>
+        /// Check User in Database or not
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
         private bool UserExists(int UserId)
         {
             return _context.Users.Any(u => u.UserId == UserId);
