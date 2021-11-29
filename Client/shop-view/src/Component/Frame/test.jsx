@@ -22,7 +22,6 @@ export default function Test() {
         Account: "Test0123",
         Password: "TestPassword",
         Name: "Frank",
-        Email: "Frank@yahho.com.tw",
         Address: "KH",
         Phone: "09123456",
         LineID: "12345678"
@@ -87,17 +86,17 @@ export default function Test() {
         //     })
         //再加入商店
 
-        axios.get('api/Commodity/1', config)
+        axios.get('api/Commodity', config)
             .then(response => {
                 console.log(response.data)
-                setCommodityTest(response.data)
-                axios.post('api/Store', store, config)
-                .then(response => {
-                    console.log(response)
-                })
+                // setCommodityTest(response.data)
+                // axios.post('api/Store', store, config)
+                // .then(response => {
+                //     console.log(response)
+                // })
             })
 
-       console.log(store)
+      // console.log(store)
 
         //查詢store紀錄
         // axios.get('api/Store', config)

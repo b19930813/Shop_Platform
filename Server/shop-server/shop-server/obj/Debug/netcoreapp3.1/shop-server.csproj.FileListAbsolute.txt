@@ -143,3 +143,7 @@ D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\obj\Debug\ne
 D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
 D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\obj\Debug\netcoreapp3.1\shop-server.RazorTargetAssemblyInfo.cs
 D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\obj\Debug\netcoreapp3.1\shop-server.Views.pdb
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\LineBotSDK.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\Microsoft.DotNet.PlatformAbstractions.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyModel.dll
+D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\obj\Debug\netcoreapp3.1\shop-server.MvcApplicationPartsAssemblyInfo.cs

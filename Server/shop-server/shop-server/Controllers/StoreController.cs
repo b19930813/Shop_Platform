@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using shop_server.Interface;
 using shop_server.Model;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace shop_server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StoreController : Controller
+    public class StoreController : Controller , IStore
     {
         private readonly ShopContext _context;
 
@@ -103,6 +104,36 @@ namespace shop_server.Controllers
         private bool StoreExists(int StoreId)
         {
             return _context.Stores.Any(s => s.StoreId == StoreId);
+        }
+
+        Task<ActionResult<Store>> IStore.PostStore(Store store)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IActionResult> AddCommodity(Commodity commodity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IActionResult> UpdateCommodity(int CommodityId, Commodity commodity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IActionResult> DeleteCommodity(int CommodityId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ActionResult<List<Commodity>>> GetStoreCommodityList(int StoreId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ActionResult<Commodity>> GetCommodity(int StoreId, int CommodityId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
