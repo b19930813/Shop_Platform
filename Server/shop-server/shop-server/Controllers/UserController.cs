@@ -136,7 +136,7 @@ namespace shop_server.Controllers
             }
 
             //輸入的密碼跟二次密碼不同
-
+            Console.WriteLine("TEST");
 
         }
 
