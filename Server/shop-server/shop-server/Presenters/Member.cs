@@ -29,7 +29,7 @@ namespace shop_server.Presenters
         {
             throw new NotImplementedException();
         }
-
+        //
         public User GetUser(string Account)
         {
             throw new NotImplementedException();
