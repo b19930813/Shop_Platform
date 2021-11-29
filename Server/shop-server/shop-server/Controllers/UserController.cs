@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using shop_server.Entities;
+using shop_server.Interface;
 using shop_server.Model;
 using shop_server.Presenters;
 using System;
@@ -13,7 +14,7 @@ namespace shop_server.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : Controller
+    public class UserController : Controller, IUser
     {
         private User LoginUser { get; set; }
 
@@ -116,22 +117,27 @@ namespace shop_server.Controllers
         /// <param name="user"></param>
         /// <param name="SecondPassword"></param>
         /// <returns></returns>
+        [Route("Register")]
         [HttpPost]
-        public async Task<ActionResult<User>> Regiest(User user, string SecondPassword)
+        public async Task<ActionResult<User>> Regiest(User user)
         {
-            if (user.Password == SecondPassword)
+            try
             {
                 user.CreatedDate = DateTime.Now;
                 _context.Users.Add(user);
 
                 await _context.SaveChangesAsync();
                 return CreatedAtAction("PostUser", new { id = user.UserId }, user);
+
             }
-            else
+            catch 
             {
-                //輸入的密碼跟二次密碼不同
                 return BadRequest();
             }
+
+            //輸入的密碼跟二次密碼不同
+            Console.WriteLine("TEST");
+
         }
 
         /// <summary>
@@ -140,6 +146,7 @@ namespace shop_server.Controllers
         /// <param name="Account"></param>
         /// <param name="Password"></param>
         /// <returns></returns>
+        [Route("Login")]
         [HttpGet]
         public async Task<IActionResult> Login(string Account, string Password)
         {
@@ -147,10 +154,10 @@ namespace shop_server.Controllers
 
             User FindUser = _context.Users.SingleOrDefault(user => user.Account == Account);
 
-            if(FindUser != null)
+            if (FindUser != null)
             {
                 //Check Password 
-                if(FindUser.Password == Password)
+                if (FindUser.Password == Password)
                 {
                     //Record Login Information 
                     RecordLoginInformation(FindUser);
@@ -173,11 +180,12 @@ namespace shop_server.Controllers
         /// </summary>
         /// <param name="Account"></param>
         /// <returns></returns>
-        [HttpPost] 
+        [Route("LogOut")]
+        [HttpPost]
         public async Task<IActionResult> LogOut(string Account)
         {
             //Check front end send user information 
-            if(LoginUser.Account == Account)
+            if (LoginUser.Account == Account)
             {
                 //Clear User Information
                 LoginUser = null;

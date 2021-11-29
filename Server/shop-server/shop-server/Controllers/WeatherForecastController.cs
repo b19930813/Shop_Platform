@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+//範例的程式 用不到
 namespace shop_server.Controllers
 {
     [ApiController]

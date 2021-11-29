@@ -16,7 +16,6 @@ namespace shop_server.Model
 
         public string Password { get; set; }
         public string Name { get; set; }
-        public string Email { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
         //一個使用者只會有一個Line ID ，跟帳號綁定用

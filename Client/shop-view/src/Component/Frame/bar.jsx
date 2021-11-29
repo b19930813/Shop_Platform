@@ -3,6 +3,7 @@ import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
+import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
@@ -24,6 +25,61 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import Button from '@mui/material/Button';
 import SideList from './SideList'
+import LoginForm from './LoginForm'
+import Avatar from '@material-ui/core/Avatar';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Container from '@material-ui/core/Container';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+
+const useStyles = makeStyles(theme => ({
+
+  paper: {
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+  button: {
+    border: 0,
+    color: 'white',
+    height: 60,
+    padding: '0 30px',
+  },
+  icon: {
+    fontSize: 20,
+  },
+  message: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+subTitle: {
+ marginTop: '2.7%',
+ marginLeft: '0.5%',
+ padding: "10%"
+},
+item: {
+  padding: "10%"
+}
+}));
+
+
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -71,13 +127,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 export default function PrimarySearchAppBar() {
+  const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
+  const [open, setOpen] = React.useState(false);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [state, setState] = React.useState(false);
-
+  
+  
   const transPage = (page) => {
     console.log(page)
     switch (page) {
@@ -102,6 +160,64 @@ export default function PrimarySearchAppBar() {
       case '登出帳號':
         break;
     }
+  }
+
+  let barState = () => {
+    var view = ""
+    var userLogin = false;
+    if (userLogin) {
+      //顯示會員登入的資料
+      view =
+        <Box>
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+              <Badge badgeContent={4} color="error">
+                <MailIcon />
+              </Badge>
+            </IconButton>
+            <IconButton
+              size="large"
+              aria-label="show 17 new notifications"
+              color="inherit"
+            >
+              <Badge badgeContent={17} color="error">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+          </Box>
+          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="show more"
+              aria-controls={mobileMenuId}
+              aria-haspopup="true"
+              onClick={handleMobileMenuOpen}
+              color="inherit"
+            >
+              <MoreIcon />
+            </IconButton>
+          </Box>
+        </Box>
+    }
+    else {
+      view =
+        <div>
+          <Button color="inherit" onClick={()=>setOpen(true)}>登入</Button>
+          <Button id="Register" color="inherit" onClick={handleClick}>註冊</Button>
+        </div>
+    }
+    return view
   }
 
   const toggleDrawer = (open) => (event) => {
@@ -163,10 +279,6 @@ export default function PrimarySearchAppBar() {
     console.log("Mail Click");
   }
 
-  const handleTitleClick = () => {
-    //Go to Index
-    console.log("Title Click");
-  }
 
   const handleGotoShop = () => {
     console.log("回到我的賣場");
@@ -185,6 +297,20 @@ export default function PrimarySearchAppBar() {
   const handleLogout = () => {
     console.log("登出");
     handleMenuClose();
+  }
+
+
+
+  const handleClick = event =>{
+    console.log(event.target.id)
+    switch(event.target.id){
+      case 'Title':
+        document.location.href = "/";
+        break;
+      case 'Register':
+        document.location.href = "/Register";
+        break;
+    }
   }
 
 
@@ -283,7 +409,7 @@ export default function PrimarySearchAppBar() {
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
             {/* Title Name */}
-            <p onClick={handleTitleClick}>
+            <p id='Title' onClick={handleClick}>
               電子商務購物網
             </p>
 
@@ -298,54 +424,40 @@ export default function PrimarySearchAppBar() {
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
+          {barState()}
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
+
+      <Dialog open={open} onClose={()=>setOpen(false)} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">電子商務購物網</DialogTitle>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              登入
+          </Typography>
+            <LoginForm />
+          </div>
+          <Box mt={5}>
+          </Box>
+        </Container>
+        <DialogActions>
+          <Button onClick={()=>setOpen(false)} color="primary">
+            取消
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
       <Drawer
         open={state}
         onClose={toggleDrawer(false)}
       >
         {list()}
+       
       </Drawer>
     </Box>
   );

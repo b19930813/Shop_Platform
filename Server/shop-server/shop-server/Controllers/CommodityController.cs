@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using shop_server.Interface;
 using shop_server.Model;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace shop_server.Controllers
 
         [Route("api/[controller]")]
         [ApiController]
-        public class CommodityController : Controller
+        public class CommodityController : Controller , ICommodity
         {
 
             private readonly ShopContext _context;

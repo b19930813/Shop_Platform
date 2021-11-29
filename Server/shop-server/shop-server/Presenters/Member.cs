@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace shop_server.Presenters
 {
-    public class Member : IMember
+    public class Member
     {
 
         private readonly ShopContext _context;
