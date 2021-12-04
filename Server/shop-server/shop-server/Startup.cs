@@ -50,7 +50,7 @@ namespace shop_server
             _shop.Database.EnsureCreated();
             app.UseCors("FrontPolicy");
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 

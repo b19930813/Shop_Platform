@@ -33,6 +33,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Container from '@material-ui/core/Container';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import axios from 'axios';
+import { config } from '../../api/config'
 
 const useStyles = makeStyles(theme => ({
 
@@ -135,6 +137,14 @@ export default function PrimarySearchAppBar() {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [state, setState] = React.useState(false);
   
+  React.useEffect(() => {
+    //取得Login 狀態
+    axios.get('api/LoginState', config)
+    .then(response => {
+        console.log(response.data)
+    })
+}, [])
+
   
   const transPage = (page) => {
     console.log(page)
@@ -410,7 +420,7 @@ export default function PrimarySearchAppBar() {
           >
             {/* Title Name */}
             <p id='Title' onClick={handleClick}>
-              電子商務購物網
+              電子商務拍賣
             </p>
 
           </Typography>

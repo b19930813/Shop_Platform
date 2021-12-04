@@ -7,6 +7,7 @@ import axios from 'axios'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
+import { config } from '../../api/config'
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -33,36 +34,43 @@ const useStyles = makeStyles(theme => ({
 export default function LoginForm() {
   const classes = useStyles();
 
-  const [email,setEmail] = React.useState('');
+  const [loginData , setLoginData] = React.useState({
+    account : "",
+    password : ""
+  })
 
-  const [password,setPassword] = React.useState('')
-
-  const handlePassword = event => {
-    event.persist();
-    setPassword(event.target.value);
-  }
-  
-  const handleEmail = event =>{
-    event.persist();
-    setEmail(event.target.value);
+  const handleTextChange = event =>{
+    switch(event.target.id){
+      case "account":
+        setLoginData(oldValues => ({
+          ...oldValues,
+          account: event.target.value
+      }));
+        break;
+      case "password":
+        setLoginData(oldValues => ({
+          ...oldValues,
+          password: event.target.value
+      }));
+        break;
+    }
   }
 
   const handleLogin = event => {
     event.preventDefault();
-    const post = {
-      email: email,
-      password: password
-    }
-    // axios
-    //   .post('/api/sessions', post)
-    //   .then(response => {
-    //     if (!response.data.error) {
-    //       location.reload();
-    //     }
-    //     else {
-    //       alert('登入失敗，請確認帳號密碼是否正確');
-    //     }
-    //   })
+ 
+    axios
+      .post('/api/User/Login',loginData,config )
+      .then(response => {
+        console.log(response)
+        if(response.data != "Fail"){
+          alert('登入成功');
+          window.location.reload()
+        }
+        else {
+          alert('登入失敗，請確認帳號密碼是否正確');
+        }
+      })
   }
 
   return (
@@ -74,11 +82,11 @@ export default function LoginForm() {
                     variant="outlined"
                     required
                     fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    onChange={handleEmail}
+                    id="account"
+                    label="account"
+                    name="account"
+                    autoComplete="account"
+                    onChange={handleTextChange}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -91,15 +99,15 @@ export default function LoginForm() {
                     label="密碼"
                     type="password"
                     autoComplete="current-password"
-                    onChange={handlePassword}
+                    onChange={handleTextChange}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <FormControlLabel
+                  {/* <FormControlLabel
                     control={<Checkbox value="allowExtraEmails" color="primary" />}
                     label="記住我(尚未)"
                     onChange = {() => console.log("run onChange")}
-                  />
+                  /> */}
                 </Grid>
               </Grid>
               <Button

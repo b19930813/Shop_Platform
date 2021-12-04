@@ -11,25 +11,36 @@ import UserInformation from './Component/Frame/userInformation'
 import LineBotInformation from './Component/Frame/lineBotInformation'
 import Register from './Component/Frame/register'
 import Steper from './Component/Tools/Stepper'
+import Main from './Component/Frame/main'
+import axios from 'axios';
+import { config } from './api/config'
+
+
 
 //加入Component
 class App extends Component {
+
   render() {
+    
+    axios.get('api/LoginState', config)
+      .then(response => {
+        console.log(response.data)
+      })
     return (
       <div>
         {/* <Bar/> */}
         <Bar />
         <BrowserRouter>
           <Routes  >
-            <Route path="/" element={<Test />} /> 
-            <Route path='/MyStore' element={<MyStore/>} />
-            <Route path='/MyBuyList' element={<MyBuyList/>} />
-            <Route path='/FocusStore' element={<FocusStore/>} />
-            <Route path='/TransHistory' element={<TransHistory/>} />
-            <Route path='/UserInformation' element={<UserInformation/>} />
-            <Route path='/LineBotInformation' element={<LineBotInformation/>} />
-            <Route path='/Register' element={<Register/>} />
-            <Route path='/Test' element={<Test/>} />
+            <Route path="/" element={<Main />} />
+            <Route path='/MyStore' element={<MyStore />} />
+            <Route path='/MyBuyList' element={<MyBuyList />} />
+            <Route path='/FocusStore' element={<FocusStore />} />
+            <Route path='/TransHistory' element={<TransHistory />} />
+            <Route path='/UserInformation' element={<UserInformation />} />
+            <Route path='/LineBotInformation' element={<LineBotInformation />} />
+            <Route path='/Register' element={<Register />} />
+            <Route path='/Test' element={<Test />} />
           </Routes  >
         </BrowserRouter>,
       </div>

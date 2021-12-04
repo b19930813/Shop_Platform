@@ -2,7 +2,7 @@ import * as React from 'react';
 import { makeStyles } from '@material-ui/core';
 import axios from 'axios';
 import { config } from '../../api/config'
-
+import Store from './Store'
 //畫面css
 
 const useStyles = makeStyles(theme => ({
@@ -16,7 +16,7 @@ export default function FocusStore() {
     const classes = useStyles();
     return (
         <div className={classes.basic}>
-           <p> Focus Store Page </p>
+          <Store/>
         </div>
     );
 }

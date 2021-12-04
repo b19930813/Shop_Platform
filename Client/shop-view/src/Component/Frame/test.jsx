@@ -19,8 +19,8 @@ export default function Test() {
     const classes = useStyles();
 
     const [user, setUser] = React.useState({
-        Account: "Test0123",
-        Password: "TestPassword",
+        Account: "Test1111",
+        Password: "Test1111",
         Name: "Frank",
         Address: "KH",
         Phone: "09123456",
@@ -77,6 +77,13 @@ export default function Test() {
             })
     }
 
+    const HandleTestAPIClick = () =>{
+        axios.post('api/Line', "" , config)
+        .then(response => {
+            console.log(response.data.message)
+        })
+    }
+
     //驗證商店跟商品的關聯性
     const handleCreateStore = () => {
         //先加商品
@@ -86,15 +93,15 @@ export default function Test() {
         //     })
         //再加入商店
 
-        axios.get('api/Commodity', config)
-            .then(response => {
-                console.log(response.data)
+        // axios.get('api/Commodity', config)
+        //     .then(response => {
+        //         console.log(response.data)
                 // setCommodityTest(response.data)
                 // axios.post('api/Store', store, config)
                 // .then(response => {
                 //     console.log(response)
                 // })
-            })
+           // })
 
       // console.log(store)
 
@@ -103,6 +110,10 @@ export default function Test() {
         //     .then(response => {
         //         console.log(response)
         //     })
+        axios.get('api/User/LoginState', config)
+        .then(response => {
+          console.log(response.data)
+        })
     }
 
     return (
@@ -112,6 +123,7 @@ export default function Test() {
                 <Button variant="contained" onClick={handleCreateUserClick}>建立使用者</Button>
                 <Button variant="outlined" onClick={handleCreateStore}>查商品後加入商店</Button>
                 <Button variant="outlined" onClick={handleCreateCommClick}>加商品</Button>
+                <Button variant="outlined" onClick={HandleTestAPIClick}>TestAPI</Button>
             </Stack>
         </div>
     );

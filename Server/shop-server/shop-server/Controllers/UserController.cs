@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using shop_server.Entities;
 using shop_server.Interface;
 using shop_server.Model;
@@ -16,7 +17,7 @@ namespace shop_server.Controllers
     [ApiController]
     public class UserController : Controller, IUser
     {
-        private User LoginUser { get; set; }
+         User LoginUser = null;
 
         private readonly ShopContext _context;
         Member member;
@@ -136,7 +137,6 @@ namespace shop_server.Controllers
             }
 
             //輸入的密碼跟二次密碼不同
-            Console.WriteLine("TEST");
 
         }
 
@@ -147,30 +147,31 @@ namespace shop_server.Controllers
         /// <param name="Password"></param>
         /// <returns></returns>
         [Route("Login")]
-        [HttpGet]
-        public async Task<IActionResult> Login(string Account, string Password)
+        [HttpPost("{Account , Password}")]
+        public async Task<IActionResult> Login(LoginData ld)
         {
             //Find User 
 
-            User FindUser = _context.Users.SingleOrDefault(user => user.Account == Account);
+            User FindUser = _context.Users.SingleOrDefault(user => user.Account == ld.Account);
 
             if (FindUser != null)
             {
                 //Check Password 
-                if (FindUser.Password == Password)
+                if (FindUser.Password == ld.Password)
                 {
                     //Record Login Information 
-                    RecordLoginInformation(FindUser);
-                    return Ok();
+                    //RecordLoginInformation(FindUser);
+                    LoginUser = FindUser;
+                    return Ok(new { status = 200, isSuccess = true, message = FindUser });
                 }
                 else
                 {
-                    return BadRequest();
+                    return Ok(new { status = 401, isSussess = false, message = "Password Error " });
                 }
             }
             else
             {
-                return NotFound();
+                return Ok(new { status = 401 , isSusses = false , message = "Not Found User"});
             }
             //return result;
         }
@@ -194,6 +195,21 @@ namespace shop_server.Controllers
             else
             {
                 return BadRequest();
+            }
+        }
+
+
+        [Route("LoginState")]
+        [HttpGet]
+        public async Task<IActionResult> LoginState()
+        {
+           if(LoginUser != null)
+            {
+                return Ok(LoginUser);
+            }
+            else
+            {
+                return Ok("Fail");
             }
         }
 
