@@ -49,8 +49,17 @@ namespace shop_server.Controllers
                 // string postData = Request.Content.ReadAsStringAsync().Result;
                 //剖析JSON
                 var ReceivedMessage = isRock.LineBot.Utility.Parsing(postData);
-                var UserSays = ReceivedMessage.events[0].message.text;
+                string UserSays = "";
+                if (ReceivedMessage.events[0].message != null)
+                {
+                    UserSays = ReceivedMessage.events[0].message.text;
+                }
+                else
+                {
+                    UserSays = ReceivedMessage.events[0].postback.data;
+                }
                 var ReplyToken = ReceivedMessage.events[0].replyToken;
+                string jsonS = "[{\"type\": \"template\",\"altText\": \"This is a buttons template\",\"template\": {\"type\": \"buttons\",\"thumbnailImageUrl\": \"https://i.imgur.com/YKDNQXU.jpg\",\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"Menu\",\"text\": \"Please select\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/123\"},\"actions\": [{\"type\": \"postback\",\"label\": \"Buy\",\"data\": \"action=buy&itemid=123\"},{\"type\": \"postback\",\"label\": \"Add to cart\",\"data\": \"action=add&itemid=123\"},{\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/123\"}]}}]";
                 //依照用戶說的特定關鍵字來回應
                 switch (UserSays.ToLower())
                 {
@@ -64,6 +73,9 @@ namespace shop_server.Controllers
                         break;
                     case "user":
                         bot.ReplyMessage(ReplyToken , JsonSerializer.Serialize(_context.Users.ToList()));
+                        break;
+                    case "test":
+                        bot.ReplyMessageWithJSON(ReplyToken, jsonS);
                         break;
                     default:
                         //回覆訊息
