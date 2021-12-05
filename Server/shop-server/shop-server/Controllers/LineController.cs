@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using shop_server.Entities;
 using shop_server.Model;
+using shop_server.Presenters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,46 +45,47 @@ namespace shop_server.Controllers
                 {
                     postData = await reader.ReadToEndAsync();
                 }
-              
+
 
 
 
                 // string postData = Request.Content.ReadAsStringAsync().Result;
                 //剖析JSON
-                var ReceivedMessage = isRock.LineBot.Utility.Parsing(postData);
-                string UserSays = "";
-                if (ReceivedMessage.events[0].message != null)
-                {
-                    UserSays = ReceivedMessage.events[0].message.text;
-                }
-                else
-                {
-                    UserSays = ReceivedMessage.events[0].postback.data;
-                }
-                var ReplyToken = ReceivedMessage.events[0].replyToken;
-                string jsonS = "[{\"type\": \"template\",\"altText\": \"This is a buttons template\",\"template\": {\"type\": \"buttons\",\"thumbnailImageUrl\": \"https://i.imgur.com/YKDNQXU.jpg\",\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"Menu\",\"text\": \"Please select\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/123\"},\"actions\": [{\"type\": \"postback\",\"label\": \"Buy\",\"data\": \"action=buy&itemid=123\"},{\"type\": \"postback\",\"label\": \"Add to cart\",\"data\": \"action=add&itemid=123\"},{\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/123\"}]}}]";
+                //取得資料
+                LineTrans LT = new LineTrans();
+                LT.TransLineData(postData);
+                
+                
+               // string jsonS = "[{\"type\": \"template\",\"altText\": \"This is a buttons template\",\"template\": {\"type\": \"buttons\",\"thumbnailImageUrl\": \"https://i.imgur.com/YKDNQXU.jpg\",\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"Menu\",\"text\": \"Please select\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/123\"},\"actions\": [{\"type\": \"postback\",\"label\": \"Buy\",\"data\": \"action=buy&itemid=123\"},{\"type\": \"postback\",\"label\": \"Add to cart\",\"data\": \"action=add&itemid=123\"}]}}]";
                 //依照用戶說的特定關鍵字來回應
-                switch (UserSays.ToLower())
+                switch (LT.Message)
                 {
-                    case "/teststicker":
-                        //回覆貼圖
-                        bot.ReplyMessage(ReplyToken, 1, 1);
+                    case "取得個人資料":
+                        bot.ReplyMessage(LT.ReplyToken, $"User ID = [{LT.UserID}]");
+
                         break;
-                    case "/testimage":
-                        //回覆圖片
-                        bot.ReplyMessage(ReplyToken, new Uri("https://scontent-tpe1-1.xx.fbcdn.net/v/t31.0-8/15800635_1324407647598805_917901174271992826_o.jpg?oh=2fe14b080454b33be59cdfea8245406d&oe=591D5C94"));
-                        break;
+                    
                     case "user":
-                        bot.ReplyMessage(ReplyToken , JsonSerializer.Serialize(_context.Users.ToList()));
+                        bot.ReplyMessage(LT.ReplyToken, JsonSerializer.Serialize(_context.Users.ToList()));
                         break;
                     case "test":
-                        bot.ReplyMessageWithJSON(ReplyToken, jsonS);
+                        LineData LD = new LineData();
+                        LD.PCMessage = "請到手機看喔";
+                        LD.ImagePath = "https://i.imgur.com/YKDNQXU.jpg";
+                        LD.Text = "快來買喔";
+                        LD.Title = "滑鼠";
+                        LD.ViewAction = "http://example.com/page/123";
+                        LD.BuyAction = "Buy This Item 123";
+                        LD.AddToCarAction = "Add To Car 123";
+                        string temp = LT.CreateTemplate(LD);
+
+                        bot.ReplyMessageWithJSON(LT.ReplyToken, temp);
                         break;
                     default:
                         //回覆訊息
-                        string Message = "哈囉, 你說了:" + UserSays;
+                        string Message = "哈囉, 你說了:" + LT.Message;
                         //回覆用戶
-                        bot.ReplyMessage(ReplyToken, Message);
+                        bot.ReplyMessage(LT.ReplyToken, Message);
                         break;
                 }
                 //回覆API OK
