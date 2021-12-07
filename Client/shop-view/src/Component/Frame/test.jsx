@@ -84,6 +84,22 @@ export default function Test() {
         })
     }
 
+    const handleUpdateUser = () =>{
+        //先取得資料
+        axios.get('/api/User/1', config)
+        .then(response => {
+            console.log(response)
+            var getData = response.data
+            getData.address = 'Test UpDate Address'
+            //再次發送api
+            getData.userId = 2
+            axios.put('api/User' , getData, config)
+            .then(updateResponse =>{
+                console.log(updateResponse)
+            })
+        })
+    }
+
     //驗證商店跟商品的關聯性
     const handleCreateStore = () => {
         //先加商品
@@ -113,6 +129,7 @@ export default function Test() {
         axios.get('api/User/LoginState', config)
         .then(response => {
           console.log(response.data)
+        
         })
     }
 
@@ -121,6 +138,7 @@ export default function Test() {
             <Stack spacing={2} direction="row" classes={classes.basic}>
                 <Button variant="text" onClick={handleGetUserclick}>查使用者List</Button>
                 <Button variant="contained" onClick={handleCreateUserClick}>建立使用者</Button>
+                <Button variant="contained" onClick={handleUpdateUser}>修改使用者</Button>
                 <Button variant="outlined" onClick={handleCreateStore}>查商品後加入商店</Button>
                 <Button variant="outlined" onClick={handleCreateCommClick}>加商品</Button>
                 <Button variant="outlined" onClick={HandleTestAPIClick}>TestAPI</Button>

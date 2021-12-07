@@ -320,6 +320,7 @@ export default function PrimarySearchAppBar() {
       case 'Register':
         document.location.href = "/Register";
         break;
+        
     }
   }
 

@@ -78,7 +78,7 @@ export default function RecipeReviewCard() {
                 <CardMedia
                     component="img"
                     height="150"
-                    image={image}
+                    image="https://localhost:44387/api/User/getImage/1"
                 />
                 <CardContent>
                     <Typography variant="body2" color="text.secondary">

@@ -64,7 +64,7 @@ export default function Register() {
         switch (index) {
             case 0:
                 view = <Box className={classes.context}>
-                    <TextField id="Account" required label="帳號" variant="outlined" helperText="請輸入Email" fullWidth value={user.Account} onChange={handleTextChange} />
+                    <TextField id="Account" required label="帳號" variant="outlined" helperText="請輸入Email" fullWidth value={user.Account} onChange={handleTextChange} onBlur = {handleDataComfirm} />
                     <TextField id="Password" required label="密碼" variant="outlined" type="password" helperText="密碼長度必須大於8個字元，區分大小寫" fullWidth value={user.Password} style={{ "margin-top": "2%" }} onChange={handleTextChange} />
                     <TextField id="ComformPassword" required label="確認密碼" variant="outlined" type="password" helperText="再次輸入密碼做確認" fullWidth value={confirmPassword} style={{ "margin-top": "2%" }} onChange={handleTextChange} />
                     <TextField id="Name" label="姓名" variant="outlined" fullWidth style={{ "margin-top": "2%" }} value={user.Name} onChange={handleTextChange} />
@@ -145,6 +145,10 @@ export default function Register() {
             next: false
         }));
 
+    }
+
+    const handleDataComfirm = event =>{
+        console.log('test')
     }
 
     const handleTextChange = event => {

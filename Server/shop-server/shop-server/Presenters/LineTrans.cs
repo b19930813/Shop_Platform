@@ -42,7 +42,7 @@ namespace shop_server.Presenters
             return result;
         }
 
-        public string CreateTemplate(LineData ld)
+        public static string CreateTemplate(LineData ld)
         {
             string result = "";
             try

@@ -9,15 +9,21 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
 const useStyles = makeStyles(theme => ({
-    context: {
-        paddingTop: "2%",
-        paddingLeft: "12%",
-        paddingRight: "12%",
-    },
-    pageCenter: {
-        margin:'auto',
-        paddingTop: "2%"
-    }
+  context: {
+    paddingTop: "2%",
+    paddingLeft: "12%",
+    paddingRight: "12%",
+  },
+  pageCenter: {
+    margin: 'auto',
+    paddingTop: "2%"
+  },
+  imageClass: {
+    width: '200px',
+    height: '200px',
+    marginLeft: '50%',
+    display: 'flex',
+  }
 }));
 
 export default function ControlledAccordions() {
@@ -28,8 +34,8 @@ export default function ControlledAccordions() {
   };
 
   return (
-    <div className = {classes.context}>
-        <h1>XXX的商店</h1>
+    <div className={classes.context}>
+      <h1>XXX的商店</h1>
       <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -43,7 +49,13 @@ export default function ControlledAccordions() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-              放圖片跟內容
+            <div style={{ "display": "flex" }}>
+              <p>test</p>
+            </div>
+            <div className={classes.imageClass}>
+              <img src="https://localhost:44387/api/User/getImage/1" className={classes.imageClass} />
+            </div>
+
           </Typography>
         </AccordionDetails>
       </Accordion>
@@ -60,7 +72,7 @@ export default function ControlledAccordions() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-              放圖片跟內容
+            放圖片跟內容
           </Typography>
         </AccordionDetails>
       </Accordion>
@@ -77,7 +89,7 @@ export default function ControlledAccordions() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-              放圖片跟內容
+            放圖片跟內容
           </Typography>
         </AccordionDetails>
       </Accordion>
@@ -94,13 +106,13 @@ export default function ControlledAccordions() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-              放圖片跟內容
+            放圖片跟內容
           </Typography>
         </AccordionDetails>
       </Accordion>
       <Stack spacing={2}>
-      <Pagination count={10} color="secondary" className = {classes.pageCenter} />
-    </Stack>
+        <Pagination count={10} color="secondary" className={classes.pageCenter} />
+      </Stack>
     </div>
   );
 }

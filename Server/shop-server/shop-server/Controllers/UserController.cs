@@ -64,14 +64,10 @@ namespace shop_server.Controllers
         }
 
         // Update User Information
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUesr(int UserId, User user)
+        [HttpPut]
+        public async Task<IActionResult> PutUesr(User user)
         {
-            if (UserId != user.UserId)
-            {
-                return BadRequest();
-            }
-
+            
             //Update UpdateDate
             user.UpdatedDate = DateTime.Now;
 
@@ -83,14 +79,7 @@ namespace shop_server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(UserId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                
             }
             return NoContent();
         }
@@ -213,6 +202,27 @@ namespace shop_server.Controllers
             }
         }
 
+        [Route("GetImage/{Id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetImage(int Id )
+        {
+            Byte[] b = null;
+            if (Id == 1)
+            {
+                b = System.IO.File.ReadAllBytes(@"D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\Images\mouse.jpg");   // You can use your own method over here.         
+            }        
+            return File(b, "image/jpeg");
+        }
+
+        [Route("AccountComfirm")]
+        [HttpPost]
+        public async Task<IActionResult> AccountComfirm(string Account)
+        {
+            //找尋帳號是否存在
+            
+            return Ok();
+        }
+
         /// <summary>
         /// Save User Login Information
         /// </summary>
@@ -234,5 +244,7 @@ namespace shop_server.Controllers
         {
             return _context.Users.Any(u => u.UserId == UserId);
         }
+
+
     }
 }
