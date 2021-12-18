@@ -58,6 +58,11 @@ const ExpandMore = styled((props) => {
 export default function RecipeReviewCard() {
     const classes = useStyles();
     const [pic, setPic] = React.useState("../image/mouse.jpg")
+
+    const handleCardClick = () =>{
+        
+    }
+
     return (
         <Card sx={{ maxWidth: 250 }} className={classes.main}>
             <CardHeader
@@ -79,6 +84,7 @@ export default function RecipeReviewCard() {
                     component="img"
                     height="150"
                     image="https://localhost:44387/api/User/getImage/1"
+                    onClick={handleCardClick}
                 />
                 <CardContent>
                     <Typography variant="body2" color="text.secondary">

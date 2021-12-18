@@ -35,6 +35,8 @@ import Container from '@material-ui/core/Container';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import axios from 'axios';
 import { config } from '../../api/config'
+import FeedIcon from '@mui/icons-material/Feed';
+
 
 const useStyles = makeStyles(theme => ({
 
@@ -256,7 +258,7 @@ export default function PrimarySearchAppBar() {
       </List>
       <Divider />
       <List>
-        {['個人資料', 'Line Bot資訊', '登出帳號'].map((text, index) => (
+        {['個人資料', 'Line Bot資訊'].map((text, index) => (
           <ListItem button key={text} onClick={() => transPage(text)}>
             <ListItemIcon>
               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
@@ -440,7 +442,7 @@ export default function PrimarySearchAppBar() {
       </AppBar>
 
       <Dialog open={open} onClose={()=>setOpen(false)} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">電子商務購物網</DialogTitle>
+        <DialogTitle id="form-dialog-title" style = {{"text-align":"center"}}>電子商務購物網</DialogTitle>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>

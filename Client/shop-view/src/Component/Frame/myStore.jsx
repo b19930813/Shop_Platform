@@ -7,6 +7,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { makeStyles } from '@material-ui/core';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 
 const useStyles = makeStyles(theme => ({
   context: {
@@ -23,6 +24,9 @@ const useStyles = makeStyles(theme => ({
     height: '200px',
     marginLeft: '50%',
     display: 'flex',
+  },
+  Text: {
+
   }
 }));
 
@@ -33,83 +37,92 @@ export default function ControlledAccordions() {
     setExpanded(isExpanded ? panel : false);
   };
 
+  const handleAddClick = () =>{
+    window.open('/TestAdd')
+  }
+
   return (
     <div className={classes.context}>
-      <h1>XXX的商店</h1>
-      <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1bh-content"
-          id="panel1bh-header"
-        >
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>
-            滑鼠
-          </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>價格 : 150</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            <div style={{ "display": "flex" }}>
-              <p>test</p>
-            </div>
-            <div className={classes.imageClass}>
-              <img src="https://localhost:44387/api/User/getImage/1" className={classes.imageClass} />
-            </div>
+      <div>
+          <h1  style={{ 'display': 'inline-block' }}>XXX的商店</h1>
+          <Button color="warning" variant="contained" style={{ 'float': 'right' , 'marginTop' : '3%'}} onClick={handleAddClick} >加入商品</Button>
+      </div>
 
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1bh-content"
-          id="panel1bh-header"
-        >
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>
-            滑鼠
-          </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>價格 : 150</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            放圖片跟內容
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1bh-content"
-          id="panel1bh-header"
-        >
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>
-            滑鼠
-          </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>價格 : 150</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            放圖片跟內容
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1bh-content"
-          id="panel1bh-header"
-        >
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>
-            滑鼠
-          </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>價格 : 150</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            放圖片跟內容
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
+        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1bh-content"
+            id="panel1bh-header"
+          >
+            <Typography sx={{ width: '33%', flexShrink: 0 }}>
+              滑鼠
+            </Typography>
+            <Typography sx={{ color: 'text.secondary' }}>價格 : 150</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              <div className={classes.Text}>
+                <p>test</p>
+              </div>
+              <div className={classes.imageClass}>
+                <img src="https://localhost:44387/api/User/getImage/1" className={classes.imageClass} />
+              </div>
+
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1bh-content"
+            id="panel1bh-header"
+          >
+            <Typography sx={{ width: '33%', flexShrink: 0 }}>
+              滑鼠
+            </Typography>
+            <Typography sx={{ color: 'text.secondary' }}>價格 : 150</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              放圖片跟內容
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1bh-content"
+            id="panel1bh-header"
+          >
+            <Typography sx={{ width: '33%', flexShrink: 0 }}>
+              滑鼠
+            </Typography>
+            <Typography sx={{ color: 'text.secondary' }}>價格 : 150</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              放圖片跟內容
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1bh-content"
+            id="panel1bh-header"
+          >
+            <Typography sx={{ width: '33%', flexShrink: 0 }}>
+              滑鼠
+            </Typography>
+            <Typography sx={{ color: 'text.secondary' }}>價格 : 150</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              放圖片跟內容
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+
       <Stack spacing={2}>
         <Pagination count={10} color="secondary" className={classes.pageCenter} />
       </Stack>
