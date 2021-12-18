@@ -60,7 +60,7 @@ export default function RecipeReviewCard() {
     const [pic, setPic] = React.useState("../image/mouse.jpg")
 
     const handleCardClick = () =>{
-        console.log("Click Card")
+        document.location.href = "/Commodity";
     }
 
     return (

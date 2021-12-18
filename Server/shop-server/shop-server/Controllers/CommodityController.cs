@@ -10,104 +10,117 @@ using System.Threading.Tasks;
 namespace shop_server.Controllers
 {
 
-        [Route("api/[controller]")]
-        [ApiController]
-        public class CommodityController : Controller , ICommodity
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CommodityController : Controller, ICommodity
+    {
+
+        private readonly ShopContext _context;
+
+        public CommodityController(ShopContext context)
         {
+            _context = context;
 
-            private readonly ShopContext _context;
+        }
+        [Route("GetRecommendCard")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Commodity>>> GetRecommendCard()
+        {
+            return await _context.Commodities.Take(4).ToListAsync();
+        }
 
-            public CommodityController(ShopContext context)
+        [Route("GetDiscountCard")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Commodity>>> GetDiscountCard()
+        {
+            return await _context.Commodities.TakeLast(4).ToListAsync();
+        }
+
+        // GET: api/Commodity
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Commodity>>> GetCommodity()
+        {
+            return await _context.Commodities.ToListAsync();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Commodity>> GetCommodity(int id)
+        {
+            var commodities = await _context.Commodities.FindAsync(id);
+
+            if (commodities == null)
             {
-                _context = context;
-
+                return NotFound();
             }
 
-            // GET: api/Commodity
-            [HttpGet]
-            public async Task<ActionResult<IEnumerable<Commodity>>> GetCommodity()
+            return commodities;
+        }
+
+        //刪除商品資料
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Commodity>> DeleteCommodity(int id)
+        {
+            var commodities = await _context.Commodities.FindAsync(id);
+            if (commodities == null)
             {
-                return await _context.Commodities.ToListAsync();
+                return NotFound();
             }
 
-            [HttpGet("{id}")]
-            public async Task<ActionResult<Commodity>> GetCommodity(int id)
-            {
-                var commodities = await _context.Commodities.FindAsync(id);
+            _context.Commodities.Remove(commodities);
+            await _context.SaveChangesAsync();
 
-                if (commodities == null)
+            return commodities;
+        }
+
+        //修改商品資料
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutCommodity(int CommodityId, Commodity commodity)
+        {
+            if (CommodityId != commodity.CommodityId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(commodity).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CommodityExists(CommodityId))
                 {
                     return NotFound();
                 }
-
-                return commodities;
-            }
-
-            //刪除商品資料
-            [HttpDelete("{id}")]
-            public async Task<ActionResult<Commodity>> DeleteCommodity(int id)
-            {
-                var commodities = await _context.Commodities.FindAsync(id);
-                if (commodities == null)
+                else
                 {
-                    return NotFound();
+                    throw;
                 }
-
-                _context.Commodities.Remove(commodities);
-                await _context.SaveChangesAsync();
-
-                return commodities;
             }
 
-            //修改商品資料
-            [HttpPut("{id}")]
-            public async Task<IActionResult> PutCommodity(int CommodityId, Commodity commodity)
-            {
-                if (CommodityId != commodity.CommodityId)
-                {
-                    return BadRequest();
-                }
-
-                _context.Entry(commodity).State = EntityState.Modified;
-
-                try
-                {
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CommodityExists(CommodityId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-
-                return NoContent();
-            }
+            return NoContent();
+        }
 
 
-            [HttpPost]
-            public async Task<ActionResult<Commodity>> PostCommodity(Commodity commodity)
-            {
-                //加上Create Date
-                commodity.CreatedDate = DateTime.Now;
-                _context.Commodities.Add(commodity);
+        [HttpPost]
+        public async Task<ActionResult<Commodity>> PostCommodity(Commodity commodity)
+        {
+            //加上Create Date
+            commodity.CreatedDate = DateTime.Now;
+            _context.Commodities.Add(commodity);
 
-                await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-                return CreatedAtAction("PostCommodity", new { id = commodity.CommodityId }, commodity);
-            }
+            return CreatedAtAction("PostCommodity", new { id = commodity.CommodityId }, commodity);
+        }
 
 
-            private bool CommodityExists(int CommodityId)
-            {
-                return _context.Commodities.Any(c => c.CommodityId == CommodityId);
-            }
+        private bool CommodityExists(int CommodityId)
+        {
+            return _context.Commodities.Any(c => c.CommodityId == CommodityId);
+        }
 
-        
+
     }
 }

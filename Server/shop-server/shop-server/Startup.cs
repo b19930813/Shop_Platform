@@ -13,6 +13,7 @@ namespace shop_server
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            AddDefaultData();
         }
 
         public IConfiguration Configuration { get; }
@@ -38,6 +39,13 @@ namespace shop_server
 
 
             services.AddControllers();
+        }
+
+        private void AddDefaultData()
+        {
+            DbContextOptions<ShopContext> op = new DbContextOptions<ShopContext>();
+            ShopContext shopContext = new ShopContext(op);
+           // shopContext.Users.Add()
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

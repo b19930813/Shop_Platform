@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function OrderList() {
+export default function OrderList(props) {
   const [expanded, setExpanded] = React.useState(false);
   const classes = useStyles();
   const handleChange = (panel) => (event, isExpanded) => {
@@ -52,7 +52,8 @@ export default function OrderList() {
   }
 
   const handleQueryClick = () =>{
-    axios.get('api/Order/GetOrder', Order, config)
+    //axios.get(`'api/Order/GetOrder/${props.userData.id}'`, config)
+    axios.get(`'api/Order/GetOrder/1`, config)
     .then(response => {
         console.log(response)
     })

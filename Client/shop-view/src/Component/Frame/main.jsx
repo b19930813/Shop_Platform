@@ -38,7 +38,7 @@ export default function Main() {
     const classes = useStyles();
     var objects = ['', '', '']
 
-
+    
     return (
         <div className={classes.basic}>
             <div className = {classes.banner}>
