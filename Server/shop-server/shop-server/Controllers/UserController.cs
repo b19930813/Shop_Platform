@@ -113,11 +113,19 @@ namespace shop_server.Controllers
         {
             try
             {
-                user.CreatedDate = DateTime.Now;
-                _context.Users.Add(user);
+                int userCount = _context.Users.Count(u => u.Account == user.Account);
+                if(userCount == 0)
+                {
+                    user.CreatedDate = DateTime.Now;
+                    _context.Users.Add(user);
 
-                await _context.SaveChangesAsync();
-                return CreatedAtAction("PostUser", new { id = user.UserId }, user);
+                    await _context.SaveChangesAsync();
+                    return CreatedAtAction("PostUser", new { id = user.UserId }, user);
+                }
+                else
+                {
+                    return Ok(new { status = 200, isSusses = false, message = "User is exist" });
+                }
 
             }
             catch 
