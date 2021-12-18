@@ -15,6 +15,7 @@ namespace shop_server.Model
         public DbSet<Store> Stores { get; set; }
         public DbSet<BuyList> BuyLists { get; set; }
         public DbSet<Commodity> Commodities { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,6 +42,11 @@ namespace shop_server.Model
             modelBuilder.Entity<Commodity>()
                .HasOne<Store>(c => c.Store)
                .WithMany(b => b.Commodities);
+
+            modelBuilder.Entity<Order>()
+               .HasMany<Commodity>(c => c.Commodities)
+               .WithOne(b => b.Order);
+
         }
     }
 }

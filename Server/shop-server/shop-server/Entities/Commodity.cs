@@ -25,6 +25,9 @@ namespace shop_server.Model
         [ForeignKey("StoreId")]
         public virtual Store Store { get; set; }
 
+        public int OrderId { get; set; }
+        [ForeignKey("OrderId")]
+        public virtual Order Order { get; set; }
 
 
         public DateTime CreatedDate { get; set; }

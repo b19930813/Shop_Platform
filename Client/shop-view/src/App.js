@@ -16,7 +16,9 @@ import axios from 'axios';
 import { config } from './api/config'
 import AddCommodity from './Component/Frame/AddCommodity'
 import Temp from './Component/Frame/temp'
+
 import Commodity from './Component/Frame/Commodity';
+import MyOrder from './Component/Frame/myOrder'
 
 //加入Component
 class App extends Component {
@@ -36,6 +38,7 @@ class App extends Component {
             <Route path="/" element={<Main />} />
             <Route path='/MyStore' element={<MyStore />} />
             <Route path='/MyBuyList' element={<MyBuyList />} />
+            <Route path='/MyOrder' element={<MyOrder />} />
             <Route path='/FocusStore' element={<FocusStore />} />
             <Route path='/TransHistory' element={<TransHistory />} />
             <Route path='/UserInformation' element={<UserInformation />} />
