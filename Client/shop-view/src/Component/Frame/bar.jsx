@@ -157,6 +157,9 @@ export default function PrimarySearchAppBar() {
       case '我的購物車':
         document.location.href = "/MyBuyList";
         break;
+      case '訂單資訊':
+        document.location.href = "/MyOrder";
+        break;
       case '關注的賣場':
         document.location.href = "/FocusStore";
         break;
@@ -247,7 +250,7 @@ export default function PrimarySearchAppBar() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {['我的賣場', '我的購物車', '關注的賣場', '交易歷史紀錄'].map((text, index) => (
+        {['我的賣場', '我的購物車', '訂單資訊', '關注的賣場', '交易歷史紀錄'].map((text, index) => (
           <ListItem button key={text} onClick={() => transPage(text)}>
             <ListItemIcon>
               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
