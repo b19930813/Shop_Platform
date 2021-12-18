@@ -136,7 +136,7 @@ namespace shop_server.Controllers
                             }
                             LineData LD = new LineData();
                             LD.PCMessage = "請到手機看喔";
-                            LD.ImagePath = com.ImagePath;
+                            //LD.ImagePath = com.ImagePath;
                             LD.Text = ShowDescribe;
                             LD.Title = $"{com.Name} 【價格:{com.Price}】";
                             LD.ViewAction = "http://example.com/page/123";  //最後在處理

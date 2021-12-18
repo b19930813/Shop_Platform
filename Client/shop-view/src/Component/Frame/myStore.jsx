@@ -38,7 +38,7 @@ export default function ControlledAccordions() {
   };
 
   const handleAddClick = () =>{
-    window.open('/TestAdd')
+    window.open('/AddCommodity')
   }
 
   return (

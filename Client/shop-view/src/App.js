@@ -14,8 +14,9 @@ import Steper from './Component/Tools/Stepper'
 import Main from './Component/Frame/main'
 import axios from 'axios';
 import { config } from './api/config'
-import TestAdd from './Component/Frame/AddComidy'
+import AddCommodity from './Component/Frame/AddCommodity'
 import Temp from './Component/Frame/temp'
+import Commodity from './Component/Frame/Commodity';
 
 //加入Component
 class App extends Component {
@@ -41,10 +42,11 @@ class App extends Component {
             <Route path='/LineBotInformation' element={<LineBotInformation />} />
             <Route path='/Register' element={<Register />} />
             <Route path='/Test' element={<Test />} />
-            <Route path='/TestAdd' element={<TestAdd />} />
+            <Route path='/AddCommodity' element={<AddCommodity />} />
             <Route path='/temp' element={<Temp />} />
+            <Route path='/Commodity' element={<Commodity />} />
           </Routes  >
-        </BrowserRouter>,
+        </BrowserRouter>
       </div>
     )
   }

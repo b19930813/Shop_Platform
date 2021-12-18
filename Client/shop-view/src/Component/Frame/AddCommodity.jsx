@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function Addcomidy(props) {
+export default function AddCommodity(props) {
     const classes = useStyles();
     const inputFile = React.useRef(null);
     const [commodity, setCommodity] = React.useState({
@@ -53,6 +53,12 @@ export default function Addcomidy(props) {
             alert("請輸入完整資料")
             return;
         }
+
+        console.log(commodity)
+        axios.post('api/Commodity', commodity, config)
+        .then(response => {
+            console.log(response)
+        })
     }
 
     const handleFileUpload = e => {
@@ -66,7 +72,7 @@ export default function Addcomidy(props) {
             // console.log(files[0])
             setCommodity(oldValues => ({
                 ...oldValues,
-                ImagePath: files[0]
+                ImagePath: files
             }))
             setImageName(files[0].name)
         }
