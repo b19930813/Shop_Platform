@@ -82,6 +82,23 @@ namespace shop_server.Controllers
                         temp += LineTrans.CreateTemplate(LD);
                         bot.ReplyMessageWithJSON(LT.ReplyToken, temp);
                         break;
+                    case "下單":
+                        //未完成，先這樣，之後再修
+                        Commodity commodity = new Commodity();
+                        commodity = _context.Commodities.Find(111);
+                        //_context.Orders.Add;
+                        Order order = new Order();
+                        order.Commodities.Add(commodity);
+                        order.Status = "待出貨";
+                        order.CreatedDate = DateTime.Now;
+                        _context.Orders.Add(order);
+                        await _context.SaveChangesAsync();
+                        //bot.ReplyMessage(LT.ReplyToken, JsonSerializer.Serialize(_context.Users.ToList()));
+                        break;
+                    case "查詢訂單":
+                        //未完成，先這樣，之後再修
+                        bot.ReplyMessage(LT.ReplyToken, JsonSerializer.Serialize(_context.Orders.FindAsync(111)));
+                        break;
                     default:
                         //回覆訊息
                         string Message = "哈囉, 你說了:" + LT.Message;
