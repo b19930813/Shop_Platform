@@ -144,9 +144,10 @@ export default function PrimarySearchAppBar() {
     //取得Login 狀態
     var userId = localStorage.getItem("userId")
  
-    if(userId != ""){
+    if(userId != ""  && typeof userId != "undefined"){
       setLoginState(true);
     }
+    console.log(`userId = ${userId}`)
 }, [])
 
   

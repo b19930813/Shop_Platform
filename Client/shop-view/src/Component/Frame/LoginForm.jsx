@@ -76,6 +76,9 @@ export default function LoginForm() {
           alert('登入失敗，請確認帳號密碼是否正確');
         }
       })
+      .catch (exception => {
+        alert('登入失敗')
+      })
   }
 
   return (
