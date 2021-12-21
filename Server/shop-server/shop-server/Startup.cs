@@ -13,7 +13,7 @@ namespace shop_server
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            AddDefaultData();
+
         }
 
         public IConfiguration Configuration { get; }
@@ -33,19 +33,26 @@ namespace shop_server
             services.AddMvc();
             services.AddDbContext<ShopContext>(opt =>
  
-              opt.UseInMemoryDatabase("MemoryList")
-              //opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+              //opt.UseInMemoryDatabase("MemoryList")
+              opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
 
 
             services.AddControllers();
         }
 
-        private void AddDefaultData()
+        private void AddDefaultData(ShopContext _shop)
         {
-            DbContextOptions<ShopContext> op = new DbContextOptions<ShopContext>();
-            ShopContext shopContext = new ShopContext(op);
-           // shopContext.Users.Add()
+
+            User user = new User();
+            user.Account = "test@gmail.com";
+            user.Address = "KH";
+            user.LineID = "123123123";
+            user.Password = "1231231";
+            user.Phone = "1312312";
+
+            _shop.Users.Add(user);
+            _shop.SaveChanges();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,6 +75,8 @@ namespace shop_server
             {
                 endpoints.MapControllers();
             });
+
+            AddDefaultData(_shop);
         }
     }
 }

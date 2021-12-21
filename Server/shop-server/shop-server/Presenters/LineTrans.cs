@@ -56,5 +56,19 @@ namespace shop_server.Presenters
             }
             return result;
         }
+
+        public static string CreateTemplate(List<LineData> list_ld)
+        {
+            string result = "";
+            try
+            {
+
+            }
+            catch(Exception ex)
+            {
+                result = "";
+            }
+            return result;
+        }
     }
 }

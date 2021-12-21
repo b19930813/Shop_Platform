@@ -19,6 +19,7 @@ namespace shop_server.Controllers
         public LineController(ShopContext context)
         {
             _context = context;
+
         }
         [HttpPost]
         public async Task<IActionResult> Post()
@@ -79,7 +80,7 @@ namespace shop_server.Controllers
                         LD.BuyAction = "Buy This Item 123";
                         LD.AddToCarAction = "Add To Car 123";
                         string temp = LineTrans.CreateTemplate(LD);
-                        temp += LineTrans.CreateTemplate(LD);
+
                         bot.ReplyMessageWithJSON(LT.ReplyToken, temp);
                         break;
                     default:
