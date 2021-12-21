@@ -29,7 +29,7 @@ namespace shop_server.Model
         public DateTime UpdatedDate { get; set; }
 
         public int UserId { get; set; }
-        [ForeignKey("UserId")]
+        //[ForeignKey("UserId")]
         public virtual User Users { get; set; }
     }
 }
