@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     },
     banner:{
         backgroundColor :'yellow',
-        height: '150px',
+        height: '300px',
         width: '100%',
     },
     SpcText:{
@@ -38,11 +38,23 @@ export default function Main() {
     const classes = useStyles();
     var objects = ['', '', '']
 
+    React.useEffect(() => {
+        axios.get('api/Commodity/GetRecommendCard', config)
+        .then(response => {
+            console.log(response)
+            console.log('Run GetRecommendCard')
+        })
+        // axios.get('api/Commodity/GetDiscountCard', config)
+        // .then(response => {
+        //     console.log(response)
+        // })
+    }, [])
+
     
     return (
         <div className={classes.basic}>
             <div className = {classes.banner}>
-               這邊要放Banner
+            <img className={classes.banner} src="https://localhost:44387/api/User/getImage/banner"></img>
             </div>
             <div className={classes.context}>
                 <h1 className={classes.SpcText}>推薦商品</h1>

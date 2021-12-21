@@ -17,7 +17,7 @@ namespace shop_server.Controllers
     [ApiController]
     public class UserController : Controller, IUser
     {
-         User LoginUser = null;
+        User LoginUser = null;
 
         private readonly ShopContext _context;
         Member member;
@@ -67,7 +67,7 @@ namespace shop_server.Controllers
         [HttpPut]
         public async Task<IActionResult> PutUesr(User user)
         {
-            
+
             //Update UpdateDate
             user.UpdatedDate = DateTime.Now;
 
@@ -79,7 +79,7 @@ namespace shop_server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                
+
             }
             return NoContent();
         }
@@ -92,7 +92,13 @@ namespace shop_server.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            //加上Create Date
+            // Post User也必須加入卡控
+            int count = _context.Users.Count(u => u.Account == user.Account);
+            if (count != 0)
+            {
+                //已經有存在的user 
+                return CreatedAtAction("PostUser", new { id = user.UserId }, new { result = "Add User Fail" });
+            }
             user.CreatedDate = DateTime.Now;
             _context.Users.Add(user);
 
@@ -114,7 +120,7 @@ namespace shop_server.Controllers
             try
             {
                 int userCount = _context.Users.Count(u => u.Account == user.Account);
-                if(userCount == 0)
+                if (userCount == 0)
                 {
                     user.CreatedDate = DateTime.Now;
                     _context.Users.Add(user);
@@ -128,7 +134,7 @@ namespace shop_server.Controllers
                 }
 
             }
-            catch 
+            catch
             {
                 return BadRequest();
             }
@@ -160,6 +166,7 @@ namespace shop_server.Controllers
                     //RecordLoginInformation(FindUser);
                     LoginUser = FindUser;
                     return Ok(new { status = 200, isSuccess = true, message = FindUser });
+
                 }
                 else
                 {
@@ -168,7 +175,7 @@ namespace shop_server.Controllers
             }
             else
             {
-                return Ok(new { status = 401 , isSusses = false , message = "Not Found User"});
+                return Ok(new { status = 401, isSusses = false, message = "Not Found User" });
             }
             //return result;
         }
@@ -200,7 +207,7 @@ namespace shop_server.Controllers
         [HttpGet]
         public async Task<IActionResult> LoginState()
         {
-           if(LoginUser != null)
+            if (LoginUser != null)
             {
                 return Ok(LoginUser);
             }
@@ -212,13 +219,12 @@ namespace shop_server.Controllers
 
         [Route("GetImage/{Id}")]
         [HttpGet]
-        public async Task<IActionResult> GetImage(int Id )
+        public async Task<IActionResult> GetImage(string Id)
         {
             Byte[] b = null;
-            if (Id == 1)
-            {
-                b = System.IO.File.ReadAllBytes(@"D:\Frank\NSYSU\Program\Shop_Platform\Server\shop-server\shop-server\Images\mouse.jpg");   // You can use your own method over here.         
-            }        
+
+            b = System.IO.File.ReadAllBytes($"{System.Environment.CurrentDirectory}\\Images\\{Id}.jpg");   // You can use your own method over here.         
+
             return File(b, "image/jpeg");
         }
 
@@ -227,7 +233,7 @@ namespace shop_server.Controllers
         public async Task<IActionResult> AccountComfirm(string Account)
         {
             //找尋帳號是否存在
-            
+
             return Ok();
         }
 

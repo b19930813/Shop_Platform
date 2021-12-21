@@ -34,12 +34,16 @@ const useStyles = makeStyles(theme => ({
 export default function LoginForm() {
   const classes = useStyles();
 
+
   const [loginData , setLoginData] = React.useState({
     account : "",
     password : ""
   })
+  
+
 
   const handleTextChange = event =>{
+    
     switch(event.target.id){
       case "account":
         setLoginData(oldValues => ({
@@ -58,12 +62,13 @@ export default function LoginForm() {
 
   const handleLogin = event => {
     event.preventDefault();
- 
     axios
       .post('/api/User/Login',loginData,config )
       .then(response => {
-        console.log(response)
+        console.log(response.data.message.userId)
         if(response.data != "Fail"){
+          localStorage.setItem('userId' , response.data.message.userId)
+         
           alert('登入成功');
           window.location.reload()
         }

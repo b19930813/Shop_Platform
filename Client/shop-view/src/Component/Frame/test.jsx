@@ -78,10 +78,11 @@ export default function Test() {
     }
 
     const HandleTestAPIClick = () =>{
-        axios.post('api/Line', "" , config)
-        .then(response => {
-            console.log(response.data.message)
-        })
+        // axios.get('api/Picture/GetImage/1' , config)
+        // .then(response => {
+        //     console.log(response.data.message)
+        // })
+        console.log(localStorage.getItem('test'))
     }
 
     const handleUpdateUser = () =>{

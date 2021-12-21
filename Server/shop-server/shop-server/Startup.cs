@@ -13,7 +13,7 @@ namespace shop_server
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
+            
         }
 
         public IConfiguration Configuration { get; }
@@ -33,8 +33,8 @@ namespace shop_server
             services.AddMvc();
             services.AddDbContext<ShopContext>(opt =>
  
-              //opt.UseInMemoryDatabase("MemoryList")
-              opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+              opt.UseInMemoryDatabase("MemoryList")
+              //opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
 
 

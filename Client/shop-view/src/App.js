@@ -24,11 +24,6 @@ import MyOrder from './Component/Frame/myOrder'
 class App extends Component {
 
   render() {
-    
-    axios.get('api/LoginState', config)
-      .then(response => {
-        console.log(response.data)
-      })
     return (
       <div>
         {/* <Bar/> */}

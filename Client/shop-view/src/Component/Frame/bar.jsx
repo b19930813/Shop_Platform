@@ -138,13 +138,15 @@ export default function PrimarySearchAppBar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [state, setState] = React.useState(false);
-  
+  const [loginState , setLoginState] = React.useState(false)
+
   React.useEffect(() => {
     //取得Login 狀態
-    axios.get('api/LoginState', config)
-    .then(response => {
-        console.log(response.data)
-    })
+    var userId = localStorage.getItem("userId")
+ 
+    if(userId != ""){
+      setLoginState(true);
+    }
 }, [])
 
   
@@ -177,9 +179,9 @@ export default function PrimarySearchAppBar() {
     }
   }
 
-  let barState = () => {
+  let barState = (loginResult) => {
     var view = ""
-    var userLogin = false;
+    var userLogin = loginResult;
     if (userLogin) {
       //顯示會員登入的資料
       view =
@@ -310,7 +312,8 @@ export default function PrimarySearchAppBar() {
   }
 
   const handleLogout = () => {
-    console.log("登出");
+    localStorage.setItem("userId","");
+    window.location.reload()
     handleMenuClose();
   }
 
@@ -440,10 +443,10 @@ export default function PrimarySearchAppBar() {
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          {barState()}
+          {barState(loginState)}
         </Toolbar>
       </AppBar>
-
+      {renderMenu}
       <Dialog open={open} onClose={()=>setOpen(false)} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title" style = {{"text-align":"center"}}>電子商務購物網</DialogTitle>
         <Container component="main" maxWidth="xs">

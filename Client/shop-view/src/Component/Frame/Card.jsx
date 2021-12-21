@@ -83,7 +83,7 @@ export default function RecipeReviewCard() {
                 <CardMedia
                     component="img"
                     height="150"
-                    image="https://localhost:44387/api/User/getImage/1"
+                    image="https://localhost:44387/api/User/getImage/mouse"
                     onClick={handleCardClick}
                 />
                 <CardContent>
