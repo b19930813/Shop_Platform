@@ -37,7 +37,13 @@ const useStyles = makeStyles(theme => ({
 export default function Main() {
     const classes = useStyles();
     var objects = ['', '', '']
-
+    const [commodity, setCommodity] = React.useState({
+        Name: "Apple",
+        Classification: "水果",
+        Describe: "水果",
+        Price: 100,
+        ImagePath: null
+      })
     React.useEffect(() => {
         axios.get('api/Commodity/GetRecommendCard', config)
         .then(response => {
@@ -59,28 +65,28 @@ export default function Main() {
             <div className={classes.context}>
                 <h1 className={classes.SpcText}>推薦商品</h1>
                 <div className={classes.Card}>
-                    <Card />
+                    <Card CommodityId = {commodity}/>
                 </div >
                 <div className={classes.Card}>
-                    <Card />
+                <Card CommodityId = {2}/>
                 </div >
                 <div className={classes.Card}>
-                    <Card />
+                <Card CommodityId = {3}/>
                 </div >
-                <Card />
+                <Card CommodityId = {4}/>
             </div>
             <div className={classes.context}>
             <h1 className={classes.SpcText}>優惠商品</h1>
                 <div className={classes.Card}>
-                    <Card />
+                <Card Data = {1}/>
                 </div >
                 <div className={classes.Card}>
-                    <Card />
+                <Card Data = {1}/>
                 </div >
                 <div className={classes.Card}>
-                    <Card />
+                <Card Data = {1}/>
                 </div >
-                <Card />
+                <Card Data = {1}/>
             </div>
         </div>
     );

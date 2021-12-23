@@ -55,12 +55,14 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-export default function RecipeReviewCard() {
+export default function RecipeReviewCard(props) {
     const classes = useStyles();
     const [pic, setPic] = React.useState("../image/mouse.jpg")
 
+
     const handleCardClick = () =>{
-        document.location.href = "/Commodity";
+        console.log(`props = ${props.CommodityId.Describe}`)
+       //  document.location.href = `/Commodity?id=${props.CommodityId}`;
     }
 
     return (

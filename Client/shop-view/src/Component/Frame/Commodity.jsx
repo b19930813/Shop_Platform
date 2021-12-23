@@ -9,6 +9,8 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
+import useQuery from './useQuery'
+
 //畫面css
 
 const useStyles = makeStyles(theme => ({
@@ -59,6 +61,15 @@ const useStyles = makeStyles(theme => ({
 
 export default function Commodity(props) {
     const classes = useStyles();
+
+      let query = useQuery()
+    React.useEffect(() => {
+          axios.get(`api/Commodity/${query.get("id")}`, config)
+          .then(response => {
+              console.log(response)
+          })
+    }, [])
+
 
     const handleChange = event => {
         setNumber(event.target.value)

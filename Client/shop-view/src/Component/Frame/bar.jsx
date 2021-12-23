@@ -143,7 +143,7 @@ export default function PrimarySearchAppBar() {
   React.useEffect(() => {
     //取得Login 狀態
     var userId = localStorage.getItem("userId")
- 
+    
     if(userId != ""  && typeof userId != "undefined"){
       setLoginState(true);
     }

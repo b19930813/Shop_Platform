@@ -33,7 +33,8 @@ export default function Test() {
         Name: "Apple",
         Classification: "Fruit",
         Describe: "可食用水果",
-        Price: 3000
+        Price: 3000,
+        
     })
 
     const [commodityTest, setCommodityTest] = React.useState({
