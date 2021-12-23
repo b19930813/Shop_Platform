@@ -65,12 +65,13 @@ export default function LoginForm() {
     axios
       .post('/api/User/Login',loginData,config )
       .then(response => {
-        console.log(response.data.message.userId)
-        if(response.data != "Fail"){
+        //if(response.data != "Fail"){
+        if(response.data.status != "401"){
+          console.log(response.data.message.userId)
           localStorage.setItem('userId' , response.data.message.userId)
          
           alert('登入成功');
-          window.location.reload()
+          window.location.reload();
         }
         else {
           alert('登入失敗，請確認帳號密碼是否正確');
