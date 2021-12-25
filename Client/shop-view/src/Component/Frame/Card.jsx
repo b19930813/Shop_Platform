@@ -61,8 +61,7 @@ export default function RecipeReviewCard(props) {
 
 
     const handleCardClick = () =>{
-        //console.log(`props = ${props.CommodityId.Describe}`)
-        document.location.href = `/Commodity?id=${props.CommodityId}`;
+        document.location.href = `/Commodity?CommodityId=${props.Data.Id}&StoreId=${props.Data.StoreId}`;
     }
 
     return (

@@ -18,17 +18,11 @@ namespace shop_server.Model
 
         //同時屬於 Store , BuyList
         public int BuyId { get; set; }
-        //[ForeignKey("BuyId")]
-        public virtual BuyList BuyList { get; set; }
+        public  BuyList BuyList { get; set; }
 
-        [ForeignKey("StoreId")]
-        public int StoreId { get; set; }
-        public virtual Store Store { get; set; }
+        public  Store Store { get; set; }
 
-        public int OrderId { get; set; }
-        //[ForeignKey("OrderId")]
-        public virtual Order Order { get; set; }
-
+        public  Order Order { get; set; }
 
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }

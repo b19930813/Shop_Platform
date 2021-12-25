@@ -19,34 +19,43 @@ namespace shop_server.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //使用者跟訂單是一對一
             modelBuilder.Entity<User>()
-                 .HasMany<Store>(s => s.Stores)
-                 .WithOne(g => g.Users);
-
-            modelBuilder.Entity<User>()
-                .HasMany<BuyList>(s => s.BuyLists)
-                .WithOne(g => g.Users);
-
-            modelBuilder.Entity<BuyList>()
-                  .HasMany<Commodity>(b => b.Commodities)
-                  .WithOne(c => c.BuyList);
-
-            modelBuilder.Entity<Store>()
-               .HasMany<Commodity>(s => s.Commodities)
-               .WithOne(c => c.Store);
-
-            modelBuilder.Entity<Commodity>()
-                .HasOne<BuyList>(c => c.BuyList)
-                .WithMany(b => b.Commodities);
-
-            modelBuilder.Entity<Commodity>()
-               .HasOne<Store>(c => c.Store)
-               .WithMany(b => b.Commodities);
+                .HasOne(u => u.Order)
+                .WithOne(o => o.User)
+                .HasForeignKey<Order>(o => o.OrderId);
 
             modelBuilder.Entity<Order>()
-               .HasMany<Commodity>(c => c.Commodities)
-               .WithOne(b => b.Order);
+               .HasOne(o => o.User)
+               .WithOne(u => u.Order);
+             
 
+            //使用者跟購物車是一對一
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.BuyLists)
+                .WithOne(b => b.Users)
+                .HasForeignKey<BuyList>(b => b.BuyId);
+
+            //使用者跟商店是一對多
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Stores)
+                .WithOne(s => s.User)
+                .IsRequired();
+
+
+            //商品都是一對多 ， 但是商品一定要在某個商店上架
+            modelBuilder.Entity<Store>()
+               .HasMany(s => s.Commodities)
+               .WithOne(c => c.Store)
+               .IsRequired();
+
+            modelBuilder.Entity<BuyList>()
+                .HasMany(b => b.Commodities)
+                .WithOne(c => c.BuyList);
+
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.Commodities)
+                .WithOne(c => c.Order);
         }
     }
 }

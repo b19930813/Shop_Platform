@@ -11,13 +11,11 @@ namespace shop_server.Model
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int BuyId { get; set; }
-        public List<Commodity> Commodities { get; set; }
+        public ICollection<Commodity> Commodities { get; set; }
 
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 
-        public int UserId { get; set; }
-        //[ForeignKey("UserId")]
         public virtual User Users { get; set; }
     }
 }

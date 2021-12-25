@@ -22,14 +22,12 @@ namespace shop_server.Model
         public int NormalEvaluation { get; set; } //一般評價
 
 
-        public List<Commodity> Commodities { get; set; }
+        public ICollection<Commodity> Commodities { get; set; }
 
 
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 
-        public int UserId { get; set; }
-        //[ForeignKey("UserId")]
-        public virtual User Users { get; set; }
+        public  User User { get; set; }
     }
 }

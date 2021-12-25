@@ -62,7 +62,7 @@ namespace shop_server.Controllers
 
             if (user == null)
             {
-                return NotFound();
+                return Ok();
             }
 
             return user;
@@ -249,13 +249,20 @@ namespace shop_server.Controllers
             return File(b, "image/jpeg");
         }
 
-        [Route("AccountComfirm")]
+        [Route("UserComfirm/{Id}")]
         [HttpPost]
-        public async Task<IActionResult> AccountComfirm(string Account)
+        public async Task<IActionResult> UserComfirm(int Id)
         {
             //找尋帳號是否存在
-
-            return Ok();
+            User user = await _context.Users.FindAsync(Id);
+            if(user!= null)
+            {
+                return Ok(new { status = 200, IsSuccess = true, message = "驗證成功" });
+            }
+            else
+            {
+                return Ok(new { status = 200, IsSuccess = true, message = "驗證失敗" });
+            }
         }
 
         /// <summary>

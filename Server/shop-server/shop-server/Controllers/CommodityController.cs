@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using shop_server.Entities;
 using shop_server.Interface;
 using shop_server.Model;
 using System;
@@ -62,7 +64,7 @@ namespace shop_server.Controllers
         {
             var commodities = await _context.Commodities.FindAsync(id);
 
-            Store store = await _context.Stores.FindAsync(commodities.StoreId);
+            Store store = await _context.Stores.FindAsync(commodities.Store.StoreId);
 
             if (commodities == null)
             {
@@ -135,6 +137,53 @@ namespace shop_server.Controllers
         private bool CommodityExists(int CommodityId)
         {
             return _context.Commodities.Any(c => c.CommodityId == CommodityId);
+        }
+
+        [Route("AddBuyList")]
+        [HttpPost]
+        public async Task<ActionResult> AddBuyList([FromBody] object request)
+        {
+            JObject json = JObject.Parse(request.ToString());
+            User user = await _context.Users.FindAsync(json["UserId"]);
+
+            Commodity commodity = await _context.Commodities.FindAsync(json["CommmodityId"]);
+
+            if (user != null && commodity != null)
+            {
+                user.BuyLists.Commodities.Add(commodity);
+                _context.SaveChanges();
+                return Ok(new { status = 200 , IsSuccess = true , message = "購買成功"});
+            }
+            else
+            {
+                return Ok(new { status = 200 , IsSucces = false , message = "發生異常，購買失敗"});
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("AddOrder")]
+        [HttpPost]
+        public async  Task<ActionResult> AddOrder([FromBody] object request)
+        {
+            JObject json = JObject.Parse(request.ToString());
+            User user = await _context.Users.FindAsync(json["UserId"]);
+
+            Commodity commodity = await _context.Commodities.FindAsync(json["CommmodityId"]);
+
+            if (user != null && commodity != null)
+            {
+                user.BuyLists.Commodities.Add(commodity);
+                _context.SaveChanges();
+                return Ok(new { status = 200, IsSuccess = true, message = "購買成功" });
+            }
+            else
+            {
+                return Ok(new { status = 200, IsSucces = false, message = "發生異常，購買失敗" });
+            }
         }
 
 

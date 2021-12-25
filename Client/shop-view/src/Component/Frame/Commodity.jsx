@@ -10,6 +10,8 @@ import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import useQuery from './useQuery'
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 //畫面css
 
@@ -61,33 +63,115 @@ const useStyles = makeStyles(theme => ({
 
 export default function Commodity(props) {
     const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
+    const Alert = React.forwardRef(function Alert(props, ref) {
+        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+    });
 
     const [commodity, setCommodity] = React.useState({
-        name : "",
-        price : "",
-        imagePath : ""
+        Name: "",
+        Price: "",
+        ImagePath: "",
+        Price: 0,
+        Count:0,
+        Descrite : "",
+        CanBuy : [1]
+    })
+
+    const [loginState , setLoginState] = React.useState({
+        userId: "" , 
+        isLogin : false
     })
 
     let query = useQuery()
+
     React.useEffect(() => {
-        axios.get(`api/Commodity/${query.get("id")}`, config)
+        var queryData = {
+            StoreId : query.get("StoreId"),
+            CommodityId : query.get("CommodityId")
+        }
+        userCheck()
+
+        axios.post(`api/Store/GetCommodityByStore`, queryData , config)
             .then(response => {
-                setCommodity(response)
+                console.log(response.data)
+                var tempCount = []
+                var needAdd = 0 
+                if(response.data.count > 5){
+                    needAdd = 5
+                }
+                else{
+                    needAdd = response.data.count
+                }
+                for(let i = 1 ; i <= needAdd ; i++){
+                    tempCount.push(i)
+                }
+                
+                setCommodity(oldValues => ({
+                    ...oldValues,
+                    Name: response.data.commodityName,
+                    Price : response.data.commodityPrice,
+                    Count :response.data.count,
+                    ImagePath : response.data.commodityImage,
+                    Descrite : response.data.commodityDesc,
+                    CanBuy : tempCount
+                }));
             })
+       
     }, [])
 
-
+  
     const handleChange = event => {
         setNumber(event.target.value)
     }
 
     const handleAddCarClick = event => {
-        console.log("test")
-        console.log(commodity);
+        if(loginState.userId != "" && loginState.isLogin){
+            
+            var order = ({
+                UserId : loginState.userId,
+                CommmodityId :commodity.commodityId
+            })
+
+            console.log(order)
+            axios.post('api/BuyList/AddBuyList' ,order , config)
+            .then(response =>{
+                console.log(response)
+            })
+        }
+        else{
+            setOpen(true);
+        }  
     }
 
     const handleBuyClick = event => {
-        console.log("handleBuyClick")
+        console.log(commodity)
+        if(loginState.userId != "" && loginState.isLogin){
+            
+        }
+        else{
+            setOpen(true);
+        }  
+    }
+
+    const userCheck = () =>{
+        var userId = localStorage.getItem("userId")
+
+        if (userId != "" && typeof userId != "undefined") {
+           setLoginState(oldValues => ({
+               ...oldValues,
+               userId : userId,
+               isLogin : true
+           }))
+        }
     }
 
     const GoodsNumber = [1, 2, 3, 4, 5]
@@ -97,13 +181,13 @@ export default function Commodity(props) {
     return (
         <div className={classes.basic}>
             <div className={classes.context}>
-                <h1>{`商品名稱 : ${commodity.name}`}</h1>
+                <h1>{`商品名稱 : ${commodity.Name}`}</h1>
                 <div className={classes.commImg}>
                     <div className={classes.contextColor}>
                         <div className={classes.smallBlock}>
-                            <p>{`價格 : ${props}`}</p>
-
-                            <p style={{ 'display': 'inline-block' }}>數量 </p>
+                            <p>{`價格 : ${commodity.Price}`}</p>
+                            <p>{`現貨數量 : ${commodity.Count}`}</p>
+                            <p style={{ 'display': 'inline-block' }}>購買數量 </p>
                             <TextField
                                 id="outlined-select-currency"
                                 select
@@ -113,7 +197,7 @@ export default function Commodity(props) {
                                 style={{ "width": "30%", "margin-left": "3%" }}
                             //helperText="選擇購買數量"
                             >
-                                {GoodsNumber.map((option) => (
+                                {commodity.CanBuy.map((option) => (
                                     <MenuItem key={option} value={option}>
                                         {option}
                                     </MenuItem>
@@ -122,23 +206,28 @@ export default function Commodity(props) {
 
                             <div>
                                 <br />
-                                <Button variant="contained" color="secondary" startIcon={<AddShoppingCartIcon />} stlye={{ "margin-top": "2%" }} onclick={handleAddCarClick}>加入購物車</Button>
-                                <Button variant="contained" color="secondary" startIcon={<LocalAtmIcon />} style={{ "margin-left": "2%" }} onclick={handleBuyClick}>直接購買</Button>
+                                <Button variant="contained" color="secondary" startIcon={<AddShoppingCartIcon />} stlye={{ "margin-top": "2%" }} onClick={handleAddCarClick}>加入購物車</Button>
+                                <Button variant="contained" color="secondary" startIcon={<LocalAtmIcon />} style={{ "margin-left": "2%" }} onClick={handleBuyClick}>直接購買</Button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className={classes.commContext} >
-                    <img src="https://localhost:44387/api/User/getImage/1" style={{ "width": "300px", "height": "300px" }} />
+                    <img src={`https://localhost:44387/api/User/getImage/${commodity.ImagePath}`} style={{ "width": "300px", "height": "300px" }} />
                 </div>
                 <br />
                 <div className={classes.desc}>
                     <h3>商品描述</h3>
                     <div style={{ "border:": "2px #DCDCDC solid" }}>
-                        test
+                        {commodity.Descrite}
                     </div>
                 </div>
             </div>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                    請先登入
+                </Alert>
+            </Snackbar>
 
         </div>
     );

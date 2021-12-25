@@ -49,14 +49,17 @@ namespace shop_server
             user.Account = "test@gmail.com";
             user.Address = "KH";
             user.LineID = "123123123";
-            user.Password = "1231231";
+            user.Password = "test";
             user.Phone = "1312312";
 
             _shop.Users.Add(user);
 
-            _shop.Stores.Add(new Store { Name = "3C賣場", UserId = 1, Describe = "專門賣3C的賣場", Classification = "3C", GoodEvaluation = 100, });
+            _shop.Stores.Add(new Store { Name = "3C賣場", User = user, Describe = "專門賣3C的賣場", Classification = "3C", GoodEvaluation = 100 });
 
-            _shop.Commodities.Add(new Commodity { Name = "滑鼠", Classification = "電器用品", ImagePath = "mouse", Price = 300, CreatedDate = DateTime.Now , StoreId = 1});
+            //Find Store
+            Store store =  _shop.Stores.Find(1);
+
+            _shop.Commodities.Add(new Commodity { Name = "滑鼠", Classification = "電器用品", ImagePath = "mouse", Price = 300, CreatedDate = DateTime.Now , Store = store, Describe = "有線滑鼠，歡迎下標"});
 
 
             _shop.SaveChanges();

@@ -25,7 +25,8 @@ namespace shop_server.Model
         //使用者會有好幾個商店
         public List<Store> Stores { get; set; }
         //使用者會有好幾個購物清單
-        public List<BuyList> BuyLists { get; set; }
+        public BuyList BuyLists { get; set; }
+        public Order Order { get; set; }
 
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }

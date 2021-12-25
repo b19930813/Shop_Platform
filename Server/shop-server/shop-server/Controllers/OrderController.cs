@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using shop_server.Interface;
 using shop_server.Model;
 using System;
@@ -106,21 +107,32 @@ namespace shop_server.Controllers
         //新增訂單資料
         [Route("AddOrder")]
         [HttpPost]
-        public async Task<ActionResult<Order>> AddOrder(Order Order)
+        public async Task<ActionResult> AddOrder([FromBody] object response)
         {
             //加上Create Date
-            Order.CreatedDate = DateTime.Now;
-            _context.Orders.Add(Order);
-
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("PostOrder", new { id = Order.OrderId }, Order);
+            JObject json = JObject.Parse(response.ToString());
+            //User驗證
+            User user = await _context.Users.FindAsync(Convert.ToInt32(json["UserId"]));
+            if(user != null)
+            {
+                Order order = new Order();
+                order.Status = "收到訂單";
+                order.User = user;
+                order.CreatedDate = DateTime.Now;
+                _context.Orders.Add(order);
+                _context.SaveChanges();
+                return Ok(new { status = 200, IsSuccess = true, message = "加入訂單成功" });
+            }
+            else
+            {
+                return Ok(new { status = 200, IsSuccess = false, message = "加入訂單失敗，User不存在" });
+            }         
         }
 
 
         private bool OrderExists(int OrderId)
         {
-            return _context.Commodities.Any(c => c.OrderId == OrderId);
+            return _context.Commodities.Any(c => c.Order.OrderId == OrderId);
         }
 
 

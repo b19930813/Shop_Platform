@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using shop_server.Interface;
 using shop_server.Model;
 using System;
@@ -100,6 +101,56 @@ namespace shop_server.Controllers
             return CreatedAtAction("PostStore", new { id = store.StoreId }, store);
         }
 
+        /// <summary>
+        /// 用名稱去查
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        [Route("GetCommodityByStore")]
+        [HttpPost]
+        public async Task<ActionResult> GetCommodityByStore([FromBody] object response)
+        {
+            try
+            {
+                JObject json = JObject.Parse(response.ToString());
+             
+                string StoreId = json["StoreId"].ToString();
+                string CommodityId = json["CommodityId"].ToString();
+                if (StoreId == "" || CommodityId == "")
+                {
+                    //找不到條件
+                    return Ok(new { status = 200, IsSuccess = false, message = "找不到指定條件" });
+                }
+                else
+                {
+                    Commodity commodity = await _context.Commodities.FindAsync(Convert.ToInt32(CommodityId));
+                    Store store = await _context.Stores.FindAsync(Convert.ToInt32(StoreId));
+                    //var CInformation = _context.Stores.Find(Convert.ToInt32(StoreId)).Commodities.Where(c => c.Name == CommodityName).ToList();
+                    if (commodity != null)
+                    {
+                        int CommCount = commodity.Store.Commodities.Count(c => c.Name == commodity.Name);
+                        return Ok(new { staus = 200, 
+                            IsSuccess = true,
+                            CommodityName = commodity.Name,
+                            CommodityId = commodity.CommodityId ,
+                            CommodityImage = commodity.ImagePath, 
+                            CommodityPrice = commodity.Price, 
+                            Count = CommCount ,
+                            CommodityDesc = commodity.Describe});
+                    }
+                    else
+                    {
+                        return Ok(new { status = 200, IsSuccess = false, message = "找不到商品" });
+                    }
+
+                }
+            }
+            catch(Exception ex)
+            {
+                return Ok(new { status = 200, IsSuccess = false, message = ex.Message });
+            }
+          
+        }
 
         private bool StoreExists(int StoreId)
         {

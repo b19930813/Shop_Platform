@@ -57,8 +57,7 @@ export default function Test() {
 
     const [order, setOrder] = React.useState({
         Status: "待出貨",
-        UserId: userId,
-        StoreId: 9487
+        UserId: 1
     });
 
     //function
@@ -106,27 +105,24 @@ export default function Test() {
                         console.log(updateResponse)
                     })
             })
-<<<<<<< HEAD
     }
 
     const handleAllAdd = () => {
 
     }
 
-    const handleSearchC = () =>{
+    const handleSearchC = () => {
         axios.get('api/Commodity/1', config)
-        .then(response => {
-            console.log(response)
-        })
+            .then(response => {
+                console.log(response)
+            })
     }
 
-    const handleSearchStore = () =>{
+    const handleSearchStore = () => {
         axios.get('api/Store', config)
-        .then(response => {
-            console.log(response)
-        })
-=======
->>>>>>> 10def42e5b5e87af6a7ff66fc2366fe92573b500
+            .then(response => {
+                console.log(response)
+            })
     }
 
     //驗證商店跟商品的關聯性
@@ -164,11 +160,15 @@ export default function Test() {
 
     //創建訂單
     const handleCreateOrderClick = () => {
-        console.log(order);
-        axios.post('api/Order', order, config)
-            .then(response => {
-                console.log(response)
+        var userId = localStorage.getItem('userId')
+        console.log(userId)
+
+
+        axios.post("api/Order/AddOrder", order, config)
+            .then(OrderResponse => {
+                console.log(OrderResponse)
             })
+
         console.log("創建訂單");
     }
 

@@ -39,11 +39,12 @@ export default function Main() {
     var objects = ['', '', '']
     const [commodity, setCommodity] = React.useState({
         Id : 1,
-        Name: "Apple",
+        Name: "滑鼠",
         Classification: "水果",
         Describe: "水果",
         Price: 100,
-        ImagePath: null
+        ImagePath: null,
+        StoreId : 1
       })
     React.useEffect(() => {
         axios.get('api/Commodity/GetRecommendCard', config)
@@ -66,7 +67,7 @@ export default function Main() {
             <div className={classes.context}>
                 <h1 className={classes.SpcText}>推薦商品</h1>
                 <div className={classes.Card}>
-                    <Card CommodityId = {commodity.Id}/>
+                    <Card Data = {commodity}/>
                 </div >
                 <div className={classes.Card}>
                 <Card CommodityId = {2}/>

@@ -89,7 +89,7 @@ namespace shop_server.Controllers
                         commodity = _context.Commodities.Find(111);
                         //_context.Orders.Add;
                         Order order = new Order();
-                        order.Commodities.Add(commodity);
+                        //order.Commodities.Add(commodity);
                         order.Status = "待出貨";
                         order.CreatedDate = DateTime.Now;
                         _context.Orders.Add(order);
