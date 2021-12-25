@@ -21,8 +21,8 @@ namespace shop_server.Model
         //[ForeignKey("BuyId")]
         public virtual BuyList BuyList { get; set; }
 
+        [ForeignKey("StoreId")]
         public int StoreId { get; set; }
-        //[ForeignKey("StoreId")]
         public virtual Store Store { get; set; }
 
         public int OrderId { get; set; }

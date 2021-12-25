@@ -27,6 +27,27 @@ namespace shop_server.Controllers
             member = new Member(context);
         }
 
+        /// <summary>
+        /// 確認有沒有這個使用者
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        [Route("GetAuth/{Id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetAuth(string Id)
+        {
+            //確認有沒有該User Id
+            var User = _context.Users.FindAsync(Id);
+            if(User != null)
+            {
+                return Ok(new { status = 200, isSuccess = true});
+            }
+            else
+            {
+                return Ok(new { status = 200, isSuccess = false });
+            }
+        }
+
         // GET: api/User
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUser()

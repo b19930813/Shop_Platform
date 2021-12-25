@@ -38,6 +38,7 @@ export default function Main() {
     const classes = useStyles();
     var objects = ['', '', '']
     const [commodity, setCommodity] = React.useState({
+        Id : 1,
         Name: "Apple",
         Classification: "水果",
         Describe: "水果",
@@ -65,7 +66,7 @@ export default function Main() {
             <div className={classes.context}>
                 <h1 className={classes.SpcText}>推薦商品</h1>
                 <div className={classes.Card}>
-                    <Card CommodityId = {commodity}/>
+                    <Card CommodityId = {commodity.Id}/>
                 </div >
                 <div className={classes.Card}>
                 <Card CommodityId = {2}/>

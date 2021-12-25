@@ -34,7 +34,7 @@ export default function Test() {
         Classification: "Fruit",
         Describe: "可食用水果",
         Price: 3000,
-        
+
     })
 
     const [commodityTest, setCommodityTest] = React.useState({
@@ -78,7 +78,7 @@ export default function Test() {
             })
     }
 
-    const HandleTestAPIClick = () =>{
+    const HandleTestAPIClick = () => {
         // axios.get('api/Picture/GetImage/1' , config)
         // .then(response => {
         //     console.log(response.data.message)
@@ -86,19 +86,37 @@ export default function Test() {
         console.log(localStorage.getItem('test'))
     }
 
-    const handleUpdateUser = () =>{
+    const handleUpdateUser = () => {
         //先取得資料
         axios.get('/api/User/1', config)
+            .then(response => {
+                console.log(response)
+                var getData = response.data
+                getData.address = 'Test UpDate Address'
+                //再次發送api
+                getData.userId = 2
+                axios.put('api/User', getData, config)
+                    .then(updateResponse => {
+                        console.log(updateResponse)
+                    })
+            })
+    }
+
+    const handleAllAdd = () => {
+
+    }
+
+    const handleSearchC = () =>{
+        axios.get('api/Commodity/1', config)
         .then(response => {
             console.log(response)
-            var getData = response.data
-            getData.address = 'Test UpDate Address'
-            //再次發送api
-            getData.userId = 2
-            axios.put('api/User' , getData, config)
-            .then(updateResponse =>{
-                console.log(updateResponse)
-            })
+        })
+    }
+
+    const handleSearchStore = () =>{
+        axios.get('api/Store', config)
+        .then(response => {
+            console.log(response)
         })
     }
 
@@ -114,14 +132,14 @@ export default function Test() {
         // axios.get('api/Commodity', config)
         //     .then(response => {
         //         console.log(response.data)
-                // setCommodityTest(response.data)
-                // axios.post('api/Store', store, config)
-                // .then(response => {
-                //     console.log(response)
-                // })
-           // })
+        // setCommodityTest(response.data)
+        // axios.post('api/Store', store, config)
+        // .then(response => {
+        //     console.log(response)
+        // })
+        // })
 
-      // console.log(store)
+        // console.log(store)
 
         //查詢store紀錄
         // axios.get('api/Store', config)
@@ -129,10 +147,10 @@ export default function Test() {
         //         console.log(response)
         //     })
         axios.get('api/User/LoginState', config)
-        .then(response => {
-          console.log(response.data)
-        
-        })
+            .then(response => {
+                console.log(response.data)
+
+            })
     }
 
     return (
@@ -140,10 +158,9 @@ export default function Test() {
             <Stack spacing={2} direction="row" classes={classes.basic}>
                 <Button variant="text" onClick={handleGetUserclick}>查使用者List</Button>
                 <Button variant="contained" onClick={handleCreateUserClick}>建立使用者</Button>
-                <Button variant="contained" onClick={handleUpdateUser}>修改使用者</Button>
-                <Button variant="outlined" onClick={handleCreateStore}>查商品後加入商店</Button>
-                <Button variant="outlined" onClick={handleCreateCommClick}>加商品</Button>
-                <Button variant="outlined" onClick={HandleTestAPIClick}>TestAPI</Button>
+                <Button variant="outlined" onClick={handleAllAdd}>全加入</Button>
+                <Button variant="outlined" onClick={handleSearchC}>查詢商品</Button>
+                <Button variant="outlined" onClick={handleSearchStore}>查商店</Button>
             </Stack>
         </div>
     );

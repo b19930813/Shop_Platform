@@ -62,12 +62,18 @@ const useStyles = makeStyles(theme => ({
 export default function Commodity(props) {
     const classes = useStyles();
 
-      let query = useQuery()
+    const [commodity, setCommodity] = React.useState({
+        name : "",
+        price : "",
+        imagePath : ""
+    })
+
+    let query = useQuery()
     React.useEffect(() => {
-          axios.get(`api/Commodity/${query.get("id")}`, config)
-          .then(response => {
-              console.log(response)
-          })
+        axios.get(`api/Commodity/${query.get("id")}`, config)
+            .then(response => {
+                setCommodity(response)
+            })
     }, [])
 
 
@@ -76,7 +82,8 @@ export default function Commodity(props) {
     }
 
     const handleAddCarClick = event => {
-        console.log("handle Add Car");
+        console.log("test")
+        console.log(commodity);
     }
 
     const handleBuyClick = event => {
@@ -90,7 +97,7 @@ export default function Commodity(props) {
     return (
         <div className={classes.basic}>
             <div className={classes.context}>
-                <h1>商品名稱</h1>
+                <h1>{`商品名稱 : ${commodity.name}`}</h1>
                 <div className={classes.commImg}>
                     <div className={classes.contextColor}>
                         <div className={classes.smallBlock}>

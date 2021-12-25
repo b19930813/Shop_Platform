@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using shop_server.Model;
+using System;
 
 namespace shop_server
 {
@@ -52,6 +53,12 @@ namespace shop_server
             user.Phone = "1312312";
 
             _shop.Users.Add(user);
+
+            _shop.Stores.Add(new Store { Name = "3C賣場", UserId = 1, Describe = "專門賣3C的賣場", Classification = "3C", GoodEvaluation = 100, });
+
+            _shop.Commodities.Add(new Commodity { Name = "滑鼠", Classification = "電器用品", ImagePath = "mouse", Price = 300, CreatedDate = DateTime.Now , StoreId = 1});
+
+
             _shop.SaveChanges();
         }
 

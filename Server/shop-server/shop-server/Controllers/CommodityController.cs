@@ -56,6 +56,22 @@ namespace shop_server.Controllers
             return commodities;
         }
 
+        [Route("GetStoreAndCommodity/{Id}")]
+        [HttpGet]
+        public async Task<ActionResult> GetStoreAndCommodity(int id)
+        {
+            var commodities = await _context.Commodities.FindAsync(id);
+
+            Store store = await _context.Stores.FindAsync(commodities.StoreId);
+
+            if (commodities == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new { Commodity = commodities , Store = store});
+        }
+
         //刪除商品資料
         [HttpDelete("{id}")]
         public async Task<ActionResult<Commodity>> DeleteCommodity(int id)
