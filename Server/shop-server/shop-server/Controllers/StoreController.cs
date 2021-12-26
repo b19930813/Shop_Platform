@@ -113,7 +113,7 @@ namespace shop_server.Controllers
             try
             {
                 JObject json = JObject.Parse(response.ToString());
-             
+               
                 string StoreId = json["StoreId"].ToString();
                 string CommodityId = json["CommodityId"].ToString();
                 if (StoreId == "" || CommodityId == "")
@@ -123,20 +123,24 @@ namespace shop_server.Controllers
                 }
                 else
                 {
-                    Commodity commodity = await _context.Commodities.FindAsync(Convert.ToInt32(CommodityId));
+                     Commodity commodity = await _context.Commodities.FindAsync(Convert.ToInt32(CommodityId));
                     Store store = await _context.Stores.FindAsync(Convert.ToInt32(StoreId));
                     //var CInformation = _context.Stores.Find(Convert.ToInt32(StoreId)).Commodities.Where(c => c.Name == CommodityName).ToList();
+                    //var CInformation = _context.Commodities.Where(c => c.CommodityId == Convert.ToInt32(CommodityId)).Include(c => c.Store).FirstOrDefault();
                     if (commodity != null)
                     {
-                        int CommCount = commodity.Store.Commodities.Count(c => c.Name == commodity.Name);
-                        return Ok(new { staus = 200, 
+                        int CommCount = store.Commodities.Count(s => s.Name == commodity.Name);
+                        return Ok
+                            (new 
+                            { staus = 200, 
                             IsSuccess = true,
                             CommodityName = commodity.Name,
                             CommodityId = commodity.CommodityId ,
                             CommodityImage = commodity.ImagePath, 
                             CommodityPrice = commodity.Price, 
                             Count = CommCount ,
-                            CommodityDesc = commodity.Describe});
+                            CommodityDesc = commodity.Describe
+                            });
                     }
                     else
                     {

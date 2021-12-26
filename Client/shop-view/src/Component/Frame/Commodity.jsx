@@ -138,10 +138,9 @@ export default function Commodity(props) {
             
             var order = ({
                 UserId : loginState.userId,
-                CommmodityId :commodity.commodityId
+                CommmodityId :query.get("CommodityId")
             })
-
-            console.log(order)
+            
             axios.post('api/BuyList/AddBuyList' ,order , config)
             .then(response =>{
                 console.log(response)

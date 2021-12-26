@@ -38,9 +38,9 @@ namespace shop_server.Model
 
             //使用者跟商店是一對多
             modelBuilder.Entity<User>()
-                .HasMany(u => u.Stores)
-                .WithOne(s => s.User)
-                .IsRequired();
+                 .HasMany(u => u.Stores)
+                 .WithOne(s => s.User)
+                 .HasForeignKey(u => u.UserId);
 
 
             //商品都是一對多 ， 但是商品一定要在某個商店上架

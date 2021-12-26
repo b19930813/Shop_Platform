@@ -61,6 +61,7 @@ namespace shop_server
             user.Password = "test";
             user.Phone = "1312312";
 
+
             _shop.Users.Add(user);
             _shop.SaveChanges(); //SaveChanges要分別下，不然連DB的時候會掛掉
 
@@ -68,6 +69,8 @@ namespace shop_server
             _shop.Stores.Add(new Store { Name = "3C賣場", User = user, Describe = "專門賣3C的賣場", Classification = "3C", GoodEvaluation = 100 });
             _shop.SaveChanges(); //SaveChanges要分別下，不然連DB的時候會掛掉
 
+            _shop.BuyLists.Add(new BuyList { Users = user, CreatedDate = DateTime.Now });
+            _shop.SaveChanges();
             //Add Commodities Data
             //Find Store
             Store store =  _shop.Stores.Find(1);
