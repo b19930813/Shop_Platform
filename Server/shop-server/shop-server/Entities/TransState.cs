@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace shop_server.Entities
 {
     //便利商店取貨
-    enum TransStoreState
+    public enum TransStoreState
     {
         InStorage,  //還在庫存尚未出貨
         InSellStore,  //賣家已將商品送到便利商店
@@ -14,6 +14,7 @@ namespace shop_server.Entities
         Transport,  //運送中
         InBuyStore,  //運送完成，已經到買家指定的便利商店
         BuyerGet, //買家取貨
+        InCar,//被加到購物車，不會被列入計算
     }
     
     //直接運送到指定地址

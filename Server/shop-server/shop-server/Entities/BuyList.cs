@@ -14,7 +14,6 @@ namespace shop_server.Model
         public int BuyId { get; set; }
         public ICollection<Commodity> Commodities { get; set; }
         public int TotalComsume { get; set; }
-        public CommodityState
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 
