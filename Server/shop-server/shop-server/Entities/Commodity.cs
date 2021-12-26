@@ -14,6 +14,7 @@ namespace shop_server.Model
         public string Describe { get; set; }
         public int Price { get; set; }
         public string ImagePath { get; set; }
+        
        // public CommodityImage CommodityImage { get; set; }
 
         //同時屬於 Store , BuyList
