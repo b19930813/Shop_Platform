@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using shop_server.Model;
 using System;
+using System.Linq;
 
 namespace shop_server
 {
@@ -45,24 +46,36 @@ namespace shop_server
         private void AddDefaultData(ShopContext _shop)
         {
 
+            int userCount = _shop.Users.Count(u => u.Account == "test@gmail.com");
+            if (userCount > 0)
+            {
+                return;
+            }
+
+            //Add User Data
             User user = new User();
             user.Account = "test@gmail.com";
+            user.Name = "TestUser";
             user.Address = "KH";
             user.LineID = "123123123";
             user.Password = "test";
             user.Phone = "1312312";
 
             _shop.Users.Add(user);
+            _shop.SaveChanges(); //SaveChanges要分別下，不然連DB的時候會掛掉
 
+            //Add Store Data
             _shop.Stores.Add(new Store { Name = "3C賣場", User = user, Describe = "專門賣3C的賣場", Classification = "3C", GoodEvaluation = 100 });
+            _shop.SaveChanges(); //SaveChanges要分別下，不然連DB的時候會掛掉
 
+            //Add Commodities Data
             //Find Store
             Store store =  _shop.Stores.Find(1);
 
             _shop.Commodities.Add(new Commodity { Name = "滑鼠", Classification = "電器用品", ImagePath = "mouse", Price = 300, CreatedDate = DateTime.Now , Store = store, Describe = "有線滑鼠，歡迎下標"});
 
 
-            _shop.SaveChanges();
+            _shop.SaveChanges(); //SaveChanges要分別下，不然連DB的時候會掛掉
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
