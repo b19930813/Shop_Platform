@@ -20,22 +20,11 @@ namespace shop_server.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //使用者跟訂單是一對一
-            //modelBuilder.Entity<User>()
-            //    .HasOne(u => u.Order)
-            //    .WithOne(o => o.User)
-            //    .HasForeignKey<Order>(o => o.OrderId);
-
-            //modelBuilder.Entity<Order>()
-            //   .HasOne(o => o.User)
-            //   .WithOne(u => u.Order);
-
-
             //使用者跟購物車是一對一
             modelBuilder.Entity<User>()
                 .HasOne(u => u.BuyLists)
                 .WithOne(b => b.Users)
-                .HasForeignKey<BuyList>(b => b.BuyId);
+                .HasForeignKey<BuyList>(b => b.UserId);
 
             //使用者跟商店是一對多
             modelBuilder.Entity<User>()
