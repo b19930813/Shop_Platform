@@ -54,60 +54,90 @@ namespace shop_server.Controllers
                 //取得資料
                 LineTrans LT = new LineTrans();
                 LT.TransLineData(postData);
-                
-                
-               // string jsonS = "[{\"type\": \"template\",\"altText\": \"This is a buttons template\",\"template\": {\"type\": \"buttons\",\"thumbnailImageUrl\": \"https://i.imgur.com/YKDNQXU.jpg\",\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"Menu\",\"text\": \"Please select\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/123\"},\"actions\": [{\"type\": \"postback\",\"label\": \"Buy\",\"data\": \"action=buy&itemid=123\"},{\"type\": \"postback\",\"label\": \"Add to cart\",\"data\": \"action=add&itemid=123\"}]}}]";
+
+
+                // string jsonS = "[{\"type\": \"template\",\"altText\": \"This is a buttons template\",\"template\": {\"type\": \"buttons\",\"thumbnailImageUrl\": \"https://i.imgur.com/YKDNQXU.jpg\",\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"Menu\",\"text\": \"Please select\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/123\"},\"actions\": [{\"type\": \"postback\",\"label\": \"Buy\",\"data\": \"action=buy&itemid=123\"},{\"type\": \"postback\",\"label\": \"Add to cart\",\"data\": \"action=add&itemid=123\"}]}}]";
                 //依照用戶說的特定關鍵字來回應
 
                 //先找關鍵字比對，再找包含
 
-                switch (LT.Message)
+                if (LT.Message == "取得個人資料")
                 {
-                    case "取得個人資料":
-                        bot.ReplyMessage(LT.ReplyToken, $"User ID = [{LT.UserID}]");
-
-                        break;                   
-                    case "user":
-                        bot.ReplyMessage(LT.ReplyToken, JsonSerializer.Serialize(_context.Users.ToList()));
-                        break;
-                    case "test":
-                        LineData LD = new LineData();
-                        LD.PCMessage = "請到手機看喔";
-                        LD.ImagePath = "https://i.imgur.com/YKDNQXU.jpg";
-                        LD.Text = "快來買喔";
-                        LD.Title = "滑鼠";
-                        LD.ViewAction = "http://example.com/page/123";
-                        LD.BuyAction = "Buy This Item 123";
-                        LD.AddToCarAction = "Add To Car 123";
-                        string temp = LineTrans.CreateTemplate(LD);
-
-                        bot.ReplyMessageWithJSON(LT.ReplyToken, temp);
-                        break;
-                    case "下單":
-                        //未完成，先這樣，之後再修
-                        Commodity commodity = new Commodity();
-                        commodity = _context.Commodities.Find(111);
-                        //_context.Orders.Add;
-                        Order order = new Order();
-                        //order.Commodities.Add(commodity);
-                        order.Status = "待出貨";
-                        order.CreatedDate = DateTime.Now;
-                        _context.Orders.Add(order);
-                        await _context.SaveChangesAsync();
-                        //bot.ReplyMessage(LT.ReplyToken, JsonSerializer.Serialize(_context.Users.ToList()));
-                        break;
-                    case "查詢訂單":
-                        //未完成，先這樣，之後再修
-                        bot.ReplyMessage(LT.ReplyToken, JsonSerializer.Serialize(_context.Orders.FindAsync(111)));
-                        break;
-                    default:
-                        //回覆訊息
-                        string Message = "哈囉, 你說了:" + LT.Message;
-                        //回覆用戶
-                        bot.ReplyMessage(LT.ReplyToken, Message);
-                        break;
+                    bot.ReplyMessage(LT.ReplyToken, $"User ID = [{LT.UserID}]");
                 }
-                //回覆API OK
+                else if (LT.Message == "查看訂單")
+                {
+                    bot.ReplyMessage(LT.ReplyToken, $"查看訂單");
+                }
+                else if (LT.Message.Contains("搜尋商品"))
+                {
+                    //驗證是否有問題
+                    string SearchString = LT.Message;
+                    string[] SearchArray = SearchString.Split(' ');
+                    if (SearchArray.Length == 2)
+                    {
+                        string CommodityName = SearchArray[1];
+                        var c_list = _context.Commodities.Where(c => c.Name == CommodityName).Take(4).ToList();
+                        List<LineData> lineList = new List<LineData>();
+                        foreach (var c in c_list)
+                        {
+                            lineList.Add(new LineData
+                            {
+                                Title = c.Name,
+                                Text = "歡迎下單",
+                                PCMessage = "請到手機板Line上觀看訊息喔!",
+                                ImagePath = $"{System.Environment.CurrentDirectory}\\Images\\{c.ImagePath}.jpg",
+                                AddToCarAction = $"Add {c.CommodityId}",
+                                BuyAction = $"Buy {c.CommodityId}",
+                                ViewAction = "http://example.com/page/123",
+                            });
+                        }
+                        string template = LineTrans.CreateTemplate(lineList);
+                        bot.ReplyMessageWithJSON(LT.ReplyToken, template);
+
+
+                    }
+                    else
+                    {
+                        bot.ReplyMessage(LT.ReplyToken, "輸入格式不正確");
+                    }
+                }
+                else if (LT.Message.Contains("查看庫存"))
+                {
+
+                }
+                else if (LT.Message.Contains("Buy"))  //按鈕指令
+                {
+                    string BuyhString = LT.Message;
+                    string[] BuyArray = BuyhString.Split(' ');
+                    if (BuyArray.Length == 2)
+                    {
+
+                    }
+                    else
+                    {
+                        bot.ReplyMessage(LT.ReplyToken, "輸入格式不正確");
+                    }
+                }
+                else if (LT.Message.Contains("Add"))//按鈕指令
+                {
+                    string AddhString = LT.Message;
+                    string[] AddArray = AddhString.Split(' ');
+                    if (AddArray.Length == 2)
+                    {
+
+                    }
+                    else
+                    {
+                        bot.ReplyMessage(LT.ReplyToken, "輸入格式不正確");
+                    }
+                }
+                else
+                {
+                    bot.ReplyMessage(LT.ReplyToken, "無此指令");
+                }
+
+             
                 return Ok();
             }
             catch (Exception ex)

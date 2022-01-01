@@ -102,7 +102,7 @@ namespace shop_server
                 endpoints.MapControllers();
             });
 
-            //AddDefaultData(_shop);
+            AddDefaultData(_shop);
         }
     }
 }
