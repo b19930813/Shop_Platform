@@ -54,16 +54,16 @@ export default function OrderList(props) {
   })
 
   React.useEffect(() => {
-    axios.get('api/Order', config)
-      .then(response => {
-        console.log(response)
-        setOrder(oldValues => ({
-          ...oldValues,
-          OrderId: response.data[0].orderId,
-          Status: response.data[0].status,
-          TotalComsume: response.data[0].totalComsume
-        }));
-      })
+    // axios.get('api/Order', config)
+    //   .then(response => {
+    //     console.log(response)
+    //     setOrder(oldValues => ({
+    //       ...oldValues,
+    //       OrderId: response.data[0].orderId,
+    //       Status: response.data[0].status,
+    //       TotalComsume: response.data[0].totalComsume
+    //     }));
+    //   })
   }, [])
 
   return (

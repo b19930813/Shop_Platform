@@ -35,8 +35,8 @@ namespace shop_server
             services.AddMvc();
             services.AddDbContext<ShopContext>(opt =>
  
-              opt.UseInMemoryDatabase("MemoryList")
-              //opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+              //opt.UseInMemoryDatabase("MemoryList")
+              opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
 
 
@@ -102,7 +102,7 @@ namespace shop_server
                 endpoints.MapControllers();
             });
 
-            AddDefaultData(_shop);
+            //AddDefaultData(_shop);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace shop_server.Model
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int BuyId { get; set; }
-        public ICollection<Commodity> Commodities { get; set; }
+      
         public int TotalComsume { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
@@ -20,5 +20,8 @@ namespace shop_server.Model
         [ForeignKey("UserId")]
         public int UserId { get; set; }
         public virtual User Users { get; set; }
+
+        
+        public ICollection<Commodity> Commodities { get; set; }
     }
 }
