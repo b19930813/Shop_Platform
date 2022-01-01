@@ -16,19 +16,20 @@ namespace shop_server.Model
         public DbSet<BuyList> BuyLists { get; set; }
         public DbSet<Commodity> Commodities { get; set; }
         public DbSet<Order> Orders { get; set; }
+        //public DbSet<BuyItem> Orders_Detail { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //使用者跟訂單是一對一
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Order)
-                .WithOne(o => o.User)
-                .HasForeignKey<Order>(o => o.OrderId);
+            //modelBuilder.Entity<User>()
+            //    .HasOne(u => u.Order)
+            //    .WithOne(o => o.User)
+            //    .HasForeignKey<Order>(o => o.OrderId);
 
-            modelBuilder.Entity<Order>()
-               .HasOne(o => o.User)
-               .WithOne(u => u.Order);
-             
+            //modelBuilder.Entity<Order>()
+            //   .HasOne(o => o.User)
+            //   .WithOne(u => u.Order);
+
 
             //使用者跟購物車是一對一
             modelBuilder.Entity<User>()

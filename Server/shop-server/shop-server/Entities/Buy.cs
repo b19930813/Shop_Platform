@@ -7,7 +7,9 @@ namespace shop_server.Entities
 {
     public class BuyItem
     {
-        public int UserId { get; set; }
+        public int OrderId { get; set; }
+        //public int UserId { get; set; }
+        public int Count { get; set; }
         public int CommmodityId { get; set; }
     }
 }

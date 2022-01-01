@@ -16,6 +16,9 @@ namespace shop_server.Model
         public int TotalComsume { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
+
+        public int UserId { get; set; }
+        [ForeignKey("UserId")]
         public User User { get; set; }
         //public int UserId { get; set; }
         //[ForeignKey("UserId")]

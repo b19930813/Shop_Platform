@@ -118,6 +118,8 @@ namespace shop_server.Controllers
                 Order order = new Order();
                 order.Status = "收到訂單";
                 order.User = user;
+                order.TotalComsume = 500;
+                order.UserId = user.UserId;
                 order.CreatedDate = DateTime.Now;
                 _context.Orders.Add(order);
                 _context.SaveChanges();

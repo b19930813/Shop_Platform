@@ -30,10 +30,39 @@ export default function OrderList(props) {
     setExpanded(isExpanded ? panel : false);
   };
 
+  const [order, setOrder] = React.useState({
+    OrderId: 0,
+    Status: "",
+    TotalComsume: 0
+  })
+
+  // const [commodity, setCommodity] = React.useState({
+  //   Name: "",
+  //   ImagePath: "",
+  //   Price: 0,
+  //   Count: 0,
+  //   Descrite: ""
+  // })
+
+  //TEST
+  const [commodity, setCommodity] = React.useState({
+    Name: "滑鼠",
+    ImagePath: "mouse",
+    Price: 100,
+    Count: 5,
+    Descrite: "我是滑鼠"
+  })
+
   React.useEffect(() => {
-    axios.get('api/Order/GetOrderByUserId', config)
+    axios.get('api/Order', config)
       .then(response => {
         console.log(response)
+        setOrder(oldValues => ({
+          ...oldValues,
+          OrderId: response.data[0].orderId,
+          Status: response.data[0].status,
+          TotalComsume: response.data[0].totalComsume
+        }));
       })
   }, [])
 
@@ -47,14 +76,36 @@ export default function OrderList(props) {
           id="panel1bh-header"
         >
           <Typography sx={{ width: '33%', flexShrink: 0 }}>
-            訂單編號:{}
+            {`訂單編號 : ${order.OrderId}`}
           </Typography>
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>訂單狀態:{}</Typography>
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>訂單金額:{}元</Typography>
+          <Typography sx={{ width: '33%', flexShrink: 0 }}>{`訂單狀態 : ${order.Status}`}</Typography>
+          <Typography sx={{ width: '33%', flexShrink: 0 }}>{`訂單金額 : ${order.TotalComsume}`}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            放圖片跟內容
+            <div className={classes.commContext} >
+              <img src={`https://localhost:44387/api/User/getImage/${commodity.ImagePath}`} style={{ "width": "300px", "height": "300px" }} />
+            </div>
+            <div className={classes.desc}>
+              <div style={{ "border:": "2px #DCDCDC solid" }}>
+                {`商品名稱 : ${commodity.Name}`}
+              </div>
+            </div>
+            <div className={classes.desc}>
+              <div style={{ "border:": "2px #DCDCDC solid" }}>
+                {`購買數量 : ${commodity.Count}`}
+              </div>
+            </div>
+            <div className={classes.desc}>
+              <div style={{ "border:": "2px #DCDCDC solid" }}>
+                {`商品總金額 : ${commodity.Count * commodity.Price}`}
+              </div>
+            </div>
+            <div className={classes.desc}>
+              <div style={{ "border:": "2px #DCDCDC solid" }}>
+              {`商品描述 : ${commodity.Descrite}`}
+              </div>
+            </div>
           </Typography>
         </AccordionDetails>
       </Accordion>

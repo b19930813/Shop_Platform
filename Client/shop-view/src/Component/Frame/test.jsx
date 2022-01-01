@@ -57,7 +57,8 @@ export default function Test() {
 
     const [order, setOrder] = React.useState({
         Status: "待出貨",
-        UserId: 1
+        UserId: userId,
+        TotalCumsume: 500
     });
 
     //function
