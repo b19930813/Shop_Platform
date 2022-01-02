@@ -13,7 +13,7 @@ namespace shop_server.Model
         public int OrderId { get; set; }
         public ICollection<Commodity> Commodities { get; set; }
         public string Status { get; set; }
-        public int TotalComsume { get; set; }
+        public int TotalConsume { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 
