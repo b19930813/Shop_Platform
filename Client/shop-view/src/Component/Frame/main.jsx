@@ -24,13 +24,13 @@ const useStyles = makeStyles(theme => ({
         marginRight: '2%',
         display: "inline-block",
     },
-    banner:{
-        backgroundColor :'yellow',
+    banner: {
+        backgroundColor: 'yellow',
         height: '300px',
         width: '100%',
     },
-    SpcText:{
-  
+    SpcText: {
+
     }
 }));
 
@@ -38,57 +38,57 @@ export default function Main() {
     const classes = useStyles();
     var objects = ['', '', '']
     const [commodity, setCommodity] = React.useState({
-        Id : 1,
+        Id: 1,
         Name: "滑鼠",
         Classification: "水果",
         Describe: "水果",
         Price: 100,
         ImagePath: null,
-        StoreId : 1
-      })
+        StoreId: 1
+    })
     React.useEffect(() => {
         axios.get('api/Commodity/GetRecommendCard', config)
-        .then(response => {
-            console.log(response)
-            console.log('Run GetRecommendCard')
-        })
+            .then(response => {
+                console.log(response)
+                console.log('Run GetRecommendCard')
+            })
         // axios.get('api/Commodity/GetDiscountCard', config)
         // .then(response => {
         //     console.log(response)
         // })
     }, [])
 
-    
+
     return (
         <div className={classes.basic}>
-            <div className = {classes.banner}>
-            <img className={classes.banner} src="https://localhost:44387/api/User/getImage/banner"></img>
+            <div className={classes.banner}>
+                <img className={classes.banner} src="https://localhost:44387/api/User/getImage/banner"></img>
             </div>
             <div className={classes.context}>
                 <h1 className={classes.SpcText}>推薦商品</h1>
                 <div className={classes.Card}>
-                    <Card Data = {commodity}/>
+                    <Card Data={commodity} />
                 </div >
                 <div className={classes.Card}>
-                <Card CommodityId = {2}/>
+                    <Card CommodityId={2} />
                 </div >
                 <div className={classes.Card}>
-                <Card CommodityId = {3}/>
+                    <Card CommodityId={3} />
                 </div >
-                <Card CommodityId = {4}/>
+                <Card CommodityId={4} />
             </div>
             <div className={classes.context}>
-            <h1 className={classes.SpcText}>優惠商品</h1>
+                <h1 className={classes.SpcText}>優惠商品</h1>
                 <div className={classes.Card}>
-                <Card Data = {1}/>
+                    <Card Data={1} />
                 </div >
                 <div className={classes.Card}>
-                <Card Data = {1}/>
+                    <Card Data={1} />
                 </div >
                 <div className={classes.Card}>
-                <Card Data = {1}/>
+                    <Card Data={1} />
                 </div >
-                <Card Data = {1}/>
+                <Card Data={1} />
             </div>
         </div>
     );

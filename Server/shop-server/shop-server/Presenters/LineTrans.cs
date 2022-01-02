@@ -11,14 +11,14 @@ namespace shop_server.Presenters
     {
         public string UserID { get; set; }
         public string GroupID { get; set; }
-        public string UsersID { get; set; }  //非特定群組的ID
+       // public string UsersID { get; set; }  //非特定群組的ID
         public string Message { get; set; }
         public string ReplyToken { get; set; }
-        public bool TransLineData(string json)
+        public string TransLineData(string json)
         {
-            if (json == null || json == "") return false;
+            if (json == null || json == "") return "";
             string MessageType = "";
-            bool result = true;
+            string result = "";
             try
             {
                 JObject postJson = JObject.Parse(json);
@@ -29,20 +29,22 @@ namespace shop_server.Presenters
                 {
                     case "message":
                         Message = postJson["events"][0]["message"]["text"].ToString();
+                        result = "message";
                         break;
                     case "postback":
                         Message = postJson["events"][0]["postback"]["data"].ToString();
+                        result = "postback";
                         break;
                 }
             }
             catch(Exception ex)
             {
-                result = false;
+                result = "message";
             }
             return result;
         }
 
-        public static string CreateTemplate(LineData ld)
+        public static string CreateBuyTemplate(LineData ld)
         {
             string result = "";
             try
@@ -57,14 +59,48 @@ namespace shop_server.Presenters
             return result;
         }
 
-        public static string CreateTemplate(List<LineData> list_ld)
+        public static string CreateBuyTemplate(List<LineData> list_ld)
         {
             string result = "";
             try
             {
+                //result = "{\"type\": \"template\",\"altText\": \"this is a carousel template\",\"template\": {\"type\": \"carousel\",\"columns\": [{\"thumbnailImageUrl\": \"https://example.com/bot/images/item1.jpg\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"this is menu\",\"text\": \"description\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/123\"},\"actions\": [{\"type\": \"postback\",\"label\": \"Buy\",\"data\": \"action=buy&itemid=111\"},{\"type\": \"postback\",\"label\": \"Add to cart\",\"data\": \"action=add&itemid=111\"},{\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/111\"}]},{\"thumbnailImageUrl\": \"https://example.com/bot/images/item2.jpg\",\"imageBackgroundColor\": \"#000000\",\"title\": \"this is menu\",\"text\": \"description\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/222\"},\"actions\": [{\"type\": \"postback\",\"label\": \"Buy\",\"data\": \"action=buy&itemid=222\"},{\"type\": \"postback\",\"label\": \"Add to cart\",\"data\": \"action=add&itemid=222\"},{\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/222\"}]}],\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\"} }";
 
+                string PCMessage = list_ld[0].PCMessage;
+                string StartString = "{\"type\": \"template\",\"altText\": \"瀏覽項目\",\"template\": {\"type\": \"carousel\",\"columns\": [";
+                string ContextString = "";
+                foreach(LineData ld in list_ld)
+                {
+                    ContextString += "{\"thumbnailImageUrl\": \"" +ld.ImagePath +"\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \""+ld.Title+"\",\"text\": \""+ld.Text+"\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \""+ld.ViewAction+"\"},\"actions\": [{\"type\": \"postback\",\"label\": \"立即下單\",\"data\": \""+ld.BuyAction+"\"},{\"type\": \"postback\",\"label\": \"加入購物車\",\"data\": \""+ld.AddToCarAction+"\"}]},";
+                }
+                ContextString = ContextString.TrimEnd(',');
+                string EndString = "],\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\"} }";
+                result = StartString + ContextString + EndString;
             }
             catch(Exception ex)
+            {
+                result = "";
+            }
+            return result;
+        }
+
+        public static string CreateViewTemplate(List<LineData> list_ld)
+        {
+            string result = "";
+            try
+            {
+                string PCMessage = list_ld[0].PCMessage;
+                string StartString = "{\"type\": \"template\",\"altText\": \"瀏覽項目\",\"template\": {\"type\": \"carousel\",\"columns\": [";
+                string ContextString = "";
+                foreach (LineData ld in list_ld)
+                {
+                    ContextString += "{\"thumbnailImageUrl\": \"" + ld.ImagePath + "\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"" + ld.Title + "\",\"text\": \"" + ld.Text + "\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"" + ld.ViewAction + "\"},\"actions\": [{\"type\": \"uri\",\"label\": \"瀏覽商品\",\"uri\": \"" + ld.ViewAction + "\"}]},";
+                }
+                ContextString = ContextString.TrimEnd(',');
+                string EndString = "],\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\"} }";
+                result = StartString + ContextString + EndString;
+            }
+            catch (Exception ex)
             {
                 result = "";
             }

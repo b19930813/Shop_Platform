@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using shop_server.Entities;
 using shop_server.Model;
@@ -27,7 +28,7 @@ namespace shop_server.Controllers
             //加上Create Date
             //Console.WriteLine("Get Line Bot Message");
 
-          
+
 
             //設定你的Channel Access Token
             string ChannelAccessToken = "P9fBc0x3S2v6StWD4O8UXhNcuxPQyTruy3L9wothmhK5Sc+f5aoAPwZrCDlGcXSaycW905yVnly5h4177mckTVhUNbiL0nrQsXFcJus5jWXd1KAA1EDb7bscrzMxxJU3DxB2eAMLYBxPuYC1YLgdQgdB04t89/1O/w1cDnyilFU=";
@@ -52,15 +53,19 @@ namespace shop_server.Controllers
                 // string postData = Request.Content.ReadAsStringAsync().Result;
                 //剖析JSON
                 //取得資料
+                string CommodityId = "";
+                User user = null;
+                Commodity commodity = null;
+                List<Commodity> commoditiesList = null;
                 LineTrans LT = new LineTrans();
-                LT.TransLineData(postData);
+                string TransType = LT.TransLineData(postData);
+
 
 
                 // string jsonS = "[{\"type\": \"template\",\"altText\": \"This is a buttons template\",\"template\": {\"type\": \"buttons\",\"thumbnailImageUrl\": \"https://i.imgur.com/YKDNQXU.jpg\",\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"Menu\",\"text\": \"Please select\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/123\"},\"actions\": [{\"type\": \"postback\",\"label\": \"Buy\",\"data\": \"action=buy&itemid=123\"},{\"type\": \"postback\",\"label\": \"Add to cart\",\"data\": \"action=add&itemid=123\"}]}}]";
                 //依照用戶說的特定關鍵字來回應
 
                 //先找關鍵字比對，再找包含
-
                 if (LT.Message == "取得個人資料")
                 {
                     bot.ReplyMessage(LT.ReplyToken, $"User ID = [{LT.UserID}]");
@@ -77,42 +82,77 @@ namespace shop_server.Controllers
                     if (SearchArray.Length == 2)
                     {
                         string CommodityName = SearchArray[1];
-                        var c_list = _context.Commodities.Where(c => c.Name == CommodityName).Take(4).ToList();
-                        List<LineData> lineList = new List<LineData>();
-                        foreach (var c in c_list)
+                        var c_list = _context.Commodities.Where(c => c.Name == CommodityName).Include(c => c.Store).Take(4).ToList();
+                        if (c_list.Count != 0)
                         {
-                            lineList.Add(new LineData
+                            List<LineData> lineList = new List<LineData>();
+                            foreach (var c in c_list)
                             {
-                                Title = c.Name,
-                                Text = "歡迎下單",
-                                PCMessage = "請到手機板Line上觀看訊息喔!",
-                                ImagePath = $"{System.Environment.CurrentDirectory}\\Images\\{c.ImagePath}.jpg",
-                                AddToCarAction = $"Add {c.CommodityId}",
-                                BuyAction = $"Buy {c.CommodityId}",
-                                ViewAction = "http://example.com/page/123",
-                            });
+                                lineList.Add(new LineData
+                                {
+                                    Title = c.Name,
+                                    Text = "歡迎下單",
+                                    PCMessage = "請到手機板Line上觀看訊息喔!",
+                                    ImagePath = $"{System.Environment.CurrentDirectory}\\Images\\{c.ImagePath}.jpg",
+                                    //AddToCarAction = "{\"StoreId\" : \""+c.Store.StoreId+"\",\"CommodityId\" : \""+c.CommodityId+"\"}",
+                                    AddToCarAction = $"Add {c.CommodityId}",
+                                    BuyAction = $"Buy {c.CommodityId}",
+                                    ViewAction = $"http://localhost:3000/Commodity?CommodityId={c.CommodityId}&StoreId={c.Store.StoreId}",
+                                });
+                            }
+                            string template = LineTrans.CreateBuyTemplate(lineList);
+                            bot.ReplyMessageWithJSON(LT.ReplyToken, template);
                         }
-                        string template = LineTrans.CreateTemplate(lineList);
-                        bot.ReplyMessageWithJSON(LT.ReplyToken, template);
-
-
+                        else
+                        {
+                            bot.ReplyMessage(LT.ReplyToken, $"查無商品 : {CommodityName}");
+                        }
                     }
                     else
                     {
                         bot.ReplyMessage(LT.ReplyToken, "輸入格式不正確");
                     }
                 }
-                else if (LT.Message.Contains("查看庫存"))
+                else if (LT.Message == "查看訂單") //Order
                 {
-
+                    commoditiesList = _context.Users.Where(u => u.LineID == LT.UserID).Include(u=>u.Order).Include(o=>o.Order.Commodities).FirstOrDefault().Order.Commodities.ToList();
+                    List<LineData> lineList = new List<LineData>();
+                    foreach(var c in commoditiesList)
+                    {
+                        lineList.Add(new LineData
+                        {
+                            Title = c.Name,
+                            Text = "購買項目",
+                            PCMessage = "請到手機板Line上觀看訊息喔!",
+                            ImagePath = $"{System.Environment.CurrentDirectory}\\Images\\{c.ImagePath}.jpg",                           
+                            ViewAction = $"http://localhost:3000/Commodity?CommodityId={c.CommodityId}&StoreId={c.Store.StoreId}",
+                        });
+                    }
+                    string template = LineTrans.CreateBuyTemplate(lineList);
+                    bot.ReplyMessageWithJSON(LT.ReplyToken, template);
                 }
                 else if (LT.Message.Contains("Buy"))  //按鈕指令
                 {
+                    //json 解析
                     string BuyhString = LT.Message;
                     string[] BuyArray = BuyhString.Split(' ');
                     if (BuyArray.Length == 2)
                     {
+                        CommodityId = BuyArray[1];
+                        //Find User and Commodity
+                        user = _context.Users.Where(u => u.LineID == LT.UserID).FirstOrDefault();
+                        var commodityCollection = _context.Commodities.Where(c => c.CommodityId == Convert.ToInt32(CommodityId)).ToList();
+                        int Money = commodityCollection.Sum(c => c.Price);
 
+                        _context.Orders.Add(new Order
+                        {
+                            User = user,
+                            UserId = user.UserId,
+                            CreatedDate = DateTime.Now,
+                            Commodities = commodityCollection,
+                            TotalConsume = Money
+                        });
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
@@ -121,11 +161,25 @@ namespace shop_server.Controllers
                 }
                 else if (LT.Message.Contains("Add"))//按鈕指令
                 {
-                    string AddhString = LT.Message;
-                    string[] AddArray = AddhString.Split(' ');
-                    if (AddArray.Length == 2)
+                    string BuyhString = LT.Message;
+                    string[] BuyArray = BuyhString.Split(' ');
+                    if (BuyArray.Length == 2)
                     {
+                        CommodityId = BuyArray[1];
+                        //Find User and Commodity
+                        user = _context.Users.Where(u => u.LineID == LT.UserID).FirstOrDefault();
+                        var commodityCollection = _context.Commodities.Where(c => c.CommodityId == Convert.ToInt32(CommodityId)).ToList();
+                        int Money = commodityCollection.Sum(c => c.Price);
 
+                        _context.BuyLists.Add(new BuyList
+                        {
+                            Users = user,
+                            UserId = user.UserId,
+                            CreatedDate = DateTime.Now,
+                            Commodities = commodityCollection,
+                            TotalConsume = Money
+                        });
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
@@ -137,7 +191,7 @@ namespace shop_server.Controllers
                     bot.ReplyMessage(LT.ReplyToken, "無此指令");
                 }
 
-             
+
                 return Ok();
             }
             catch (Exception ex)
@@ -146,67 +200,6 @@ namespace shop_server.Controllers
             }
         }
 
-        public LineTransReturnType ConvertToMessage(string Word)
-        {
-            LineTransReturnType LTRT = new LineTransReturnType();
-            LTRT.returnType = "";
-            LTRT.returnMessage = "";
-            try
-            {
-                //回傳功能 
-                if (Word.Contains("功能"))
-                {
-                    LTRT.returnType = "Text";
-                    LTRT.returnMessage = "取得個人資料 \r\n 查詢 商品名稱\r\n";
-                }
-                else if (Word.Contains("查詢"))
-                {
-                    //利用string split
-                    string[] SearchArray = Word.Split(' ');
-                    if (SearchArray.Length == 2)
-                    {
-                        string CommodityName = SearchArray[1];
-                        //取得前三筆有符合條件的
-                        List<Commodity> CommodityList = _context.Commodities.Where(c => c.Name.Contains(CommodityName)).Take(3).ToList();
-                        //組成template回傳
-                        LTRT.returnType = "Template";
-                        foreach (var com in CommodityList)
-                        {
-                            string ShowDescribe = "";
-                            if (com.Describe.Length > 15)
-                            {
-                                ShowDescribe = com.Describe.Substring(0, 15);
-                            }
-                            else
-                            {
-                                ShowDescribe = com.Describe;
-                            }
-                            LineData LD = new LineData();
-                            LD.PCMessage = "請到手機看喔";
-                            //LD.ImagePath = com.ImagePath;
-                            LD.Text = ShowDescribe;
-                            LD.Title = $"{com.Name} 【價格:{com.Price}】";
-                            LD.ViewAction = "http://example.com/page/123";  //最後在處理
-                            LD.BuyAction = "Buy This Item 123";//最後在處理
-                            LD.AddToCarAction = "Add To Car 123";//最後在處理
-                            LTRT.returnMessage += LineTrans.CreateTemplate(LD);
-                        }
-
-                    }
-                    else
-                    {
-                        LTRT.returnType = "Text";
-                        LTRT.returnMessage = "無效的查詢，必須輸入 【查詢 商品名稱】";
-                    }
-                }
-
-            }
-            catch (Exception ex)
-            {
-            
-            }
-            return LTRT;
-        }
     }
-    }
+}
 

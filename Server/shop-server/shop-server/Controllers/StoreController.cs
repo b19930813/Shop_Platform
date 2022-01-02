@@ -142,6 +142,7 @@ namespace shop_server.Controllers
                     Store store = _context.Stores.Where(r => r.StoreId == Convert.ToInt32(StoreId)).Include(r => r.Commodities).SingleOrDefault();
                     //var CInformation = _context.Stores.Find(Convert.ToInt32(StoreId)).Commodities.Where(c => c.Name == CommodityName).ToList();
                     //var CInformation = _context.Commodities.Where(c => c.CommodityId == Convert.ToInt32(CommodityId)).Include(c => c.Store).FirstOrDefault();
+
                     if (commodity != null)
                     {
                         int CommCount = store.Commodities.Count(s => s.Name == commodity.Name);
@@ -155,7 +156,7 @@ namespace shop_server.Controllers
                             CommodityImage = commodity.ImagePath, 
                             CommodityPrice = commodity.Price, 
                             Count = CommCount ,
-                            CommodityDesc = commodity.Describe
+                            CommodityDesc = commodity.Describe,
                             });
                     }
                     else

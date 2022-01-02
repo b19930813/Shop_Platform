@@ -26,7 +26,7 @@ namespace shop_server.Model
         public ICollection<Store> Stores { get; set; }
         //使用者會有好幾個購物清單
         public BuyList BuyLists { get; set; }
-        //public Order Order { get; set; }
+        public Order Order { get; set; }
 
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
