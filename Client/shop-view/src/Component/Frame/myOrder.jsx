@@ -26,6 +26,7 @@ const useStyles = makeStyles(theme => ({
 export default function OrderList(props) {
   const [expanded, setExpanded] = React.useState(false);
   const classes = useStyles();
+  const userId = parseInt(localStorage.getItem("userId"));
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -54,16 +55,16 @@ export default function OrderList(props) {
   })
 
   React.useEffect(() => {
-    // axios.get('api/Order', config)
-    //   .then(response => {
-    //     console.log(response)
-    //     setOrder(oldValues => ({
-    //       ...oldValues,
-    //       OrderId: response.data[0].orderId,
-    //       Status: response.data[0].status,
-    //       TotalComsume: response.data[0].totalComsume
-    //     }));
-    //   })
+    axios.get('api/Order', config)
+      .then(response => {
+        console.log(response)
+        setOrder(oldValues => ({
+          ...oldValues,
+          OrderId: response.data[0].orderId,
+          Status: response.data[0].status,
+          TotalConsume: response.data[0].totalConsume
+        }));
+      })
   }, [])
 
   return (
@@ -79,12 +80,12 @@ export default function OrderList(props) {
             {`訂單編號 : ${order.OrderId}`}
           </Typography>
           <Typography sx={{ width: '33%', flexShrink: 0 }}>{`訂單狀態 : ${order.Status}`}</Typography>
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>{`訂單金額 : ${order.TotalComsume}`}</Typography>
+          <Typography sx={{ width: '33%', flexShrink: 0 }}>{`訂單金額 : ${order.TotalConsume} 元`}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
             <div className={classes.commContext} >
-              <img src={`https://localhost:44387/api/User/getImage/${commodity.ImagePath}`} style={{ "width": "300px", "height": "300px" }} />
+              <img src={`https://localhost:44387/api/User/getImage/${commodity.ImagePath}`} style={{ "width": "150px", "height": "150px" }} />
             </div>
             <div className={classes.desc}>
               <div style={{ "border:": "2px #DCDCDC solid" }}>

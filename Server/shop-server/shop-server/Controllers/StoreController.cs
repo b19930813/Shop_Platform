@@ -101,6 +101,20 @@ namespace shop_server.Controllers
             return CreatedAtAction("PostStore", new { id = store.StoreId }, store);
         }
 
+        [Route("GetStoreByUserId/{UserId}")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Store>>> GetStoreByUserId(int UserId)
+        {
+            var Stores = await _context.Stores.Where(r => r.UserId == UserId).ToListAsync();
+
+            if (Stores == null)
+            {
+                return NotFound();
+            }
+
+            return Stores;
+        }
+
         /// <summary>
         /// 用名稱去查
         /// </summary>
@@ -124,12 +138,14 @@ namespace shop_server.Controllers
                 else
                 {
                      Commodity commodity = await _context.Commodities.FindAsync(Convert.ToInt32(CommodityId));
-                    Store store = await _context.Stores.FindAsync(Convert.ToInt32(StoreId));
+                    //Store store = await _context.Stores.FindAsync(Convert.ToInt32(StoreId));
+                    Store store = _context.Stores.Where(r => r.StoreId == Convert.ToInt32(StoreId)).Include(r => r.Commodities).SingleOrDefault();
                     //var CInformation = _context.Stores.Find(Convert.ToInt32(StoreId)).Commodities.Where(c => c.Name == CommodityName).ToList();
                     //var CInformation = _context.Commodities.Where(c => c.CommodityId == Convert.ToInt32(CommodityId)).Include(c => c.Store).FirstOrDefault();
                     if (commodity != null)
                     {
                         int CommCount = store.Commodities.Count(s => s.Name == commodity.Name);
+                        //int CommCount = store.Commodities.ToList().Count(s => s.Name == commodity.Name);
                         return Ok
                             (new 
                             { staus = 200, 
@@ -154,6 +170,77 @@ namespace shop_server.Controllers
                 return Ok(new { status = 200, IsSuccess = false, message = ex.Message });
             }
           
+        }
+
+        /// <summary>
+        /// 用名稱去查
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        //[Route("GetCommodityByStoreId/{in_StoreId}")]
+        //[HttpGet]
+        //public async Task<ActionResult> GetCommodityByStoreId(int in_StoreId)
+        //{
+        //    try
+        //    {                
+        //        Store store = await _context.Stores.FindAsync(in_StoreId);
+        //        //Commodity commodity = await _context.Commodities.FindAsync(Convert.ToInt32(CommodityId));
+        //        //Commodity commodity = _context.Commodities.Where(r => r.Store == store).FirstOrDefault();
+        //        List<Commodity> commodity = _context.Commodities.Where(r => r.Store == store).ToList();
+        //        //var commodity = _context.Commodities.Where(r => r.Store == store).GroupBy(r=> new {r.Name,r.Classification }).ToList();
+        //        if (commodity != null)
+        //        {
+        //            //int CommCount = store.Commodities.Count(s => s.Name == commodity.Name);
+        //            //int CommCount = store.Commodities.Count(s => s.Name == commodity.);
+        //            //store.Commodities.GroupBy(r => new { r.BuyList, r.BuyId });
+        //            return Ok
+        //                (new
+        //                {
+        //                    staus = 200,
+        //                    IsSuccess = true,
+        //                    //CommodityName = commodity.Name,
+        //                    //CommodityId = commodity.CommodityId,
+        //                    //CommodityImage = commodity.ImagePath,
+        //                    //CommodityPrice = commodity.Price,
+        //                    //Count = CommCount,
+        //                    //CommodityDesc = commodity.Describe
+        //                    CommodityData = commodity
+        //                });
+        //        }
+        //        else
+        //        {
+        //            return Ok(new { status = 200, IsSuccess = false, message = "此商店尚未上架商品" });
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Ok(new { status = 200, IsSuccess = false, message = ex.Message });
+        //    }
+
+        //}
+        [Route("GetCommodityByStoreId/{in_StoreId}")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Commodity>>> GetCommodityByStoreId(int in_StoreId)
+        //public async Task<ActionResult> GetCommodityByStoreId(int in_StoreId)
+        {
+            try
+            {
+                List<Commodity> commodity = _context.Commodities.Where(r => r.Store.StoreId == in_StoreId).ToList();
+                //不知道怎麼Groupby 求救
+                //List<Commodity> commodity = _context.Commodities.Where(r => r.Store.StoreId == in_StoreId).GroupBy(r => r.Name).ToList();
+
+                if (commodity == null)
+                {
+                    return NotFound();
+                }
+
+                return commodity;
+            }
+            catch (Exception ex) 
+            {
+                throw;
+            }
+
         }
 
         private bool StoreExists(int StoreId)
