@@ -44,21 +44,27 @@ export default function AddCommodity(props) {
         Classification: "",
         Describe: "",
         Price: 0,
-        ImagePath: null
+        //ImagePath: null
+        ImagePath: "",
+        // TransStoreState: 0,
+        // BuyId: 0,
+        // StroeId: 0,
+        // BuyListBuyId:0,
+        // OrderId:0
     })
 
     const [imageName, setImageName] = React.useState("");
     const handleAddCommodity = () => {
-        if (commodity.Name == "" || commodity.Classification == "" || commodity.Describe == "" || imageName =="") {
+        if (commodity.Name == "" || commodity.Classification == "" || commodity.Describe == "" || imageName == "") {
             alert("請輸入完整資料")
             return;
         }
 
         console.log(commodity)
         axios.post('api/Commodity', commodity, config)
-        .then(response => {
-            console.log(response)
-        })
+            .then(response => {
+                console.log(response)
+            })
     }
 
     const handleFileUpload = e => {
@@ -72,7 +78,9 @@ export default function AddCommodity(props) {
             // console.log(files[0])
             setCommodity(oldValues => ({
                 ...oldValues,
-                ImagePath: files
+                //ImagePath: files
+                //ImagePath: files[0].name
+                ImagePath: files[0].name.substring(0,files[0].name.indexOf("."))
             }))
             setImageName(files[0].name)
         }
@@ -125,7 +133,7 @@ export default function AddCommodity(props) {
                 <TextField id="Name" label="商品名稱" variant="outlined" fullWidth onChange={handleTextChange} />
                 <TextField id="Classification" label="商品分類" variant="outlined" fullWidth style={{ "margin-top": "2%" }} onChange={handleTextChange} />
                 <TextField id="Price" label="價格" variant="outlined" fullWidth style={{ "margin-top": "2%" }} onChange={handleTextChange} />
-                <TextField id="Classification" label="圖片" variant="outlined" fullWidth style={{ "margin-top": "2%" }} value={imageName} onChange={handleTextChange} />
+                <TextField id="ImagePath" label="圖片" variant="outlined" fullWidth style={{ "margin-top": "2%" }} value={imageName} onChange={handleTextChange} />
                 <input
                     style={{ display: "none" }}
                     // accept=".zip,.rar"

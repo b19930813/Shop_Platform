@@ -76,7 +76,8 @@ namespace shop_server
             Store store =  _shop.Stores.Find(1);
 
             _shop.Commodities.Add(new Commodity { Name = "滑鼠", Classification = "電器用品", ImagePath = "mouse", Price = 300, CreatedDate = DateTime.Now , Store = store, Describe = "有線滑鼠，歡迎下標"});
-
+            _shop.Commodities.Add(new Commodity { Name = "滑鼠", Classification = "電器用品", ImagePath = "mouse", Price = 300, CreatedDate = DateTime.Now, Store = store, Describe = "有線滑鼠，歡迎下標" });
+            _shop.Commodities.Add(new Commodity { Name = "鍵盤", Classification = "電器用品", ImagePath = "keyboard", Price = 500, CreatedDate = DateTime.Now, Store = store, Describe = "有線鍵盤，歡迎下標" });
 
             _shop.SaveChanges(); //SaveChanges要分別下，不然連DB的時候會掛掉
         }
