@@ -58,10 +58,11 @@ const ExpandMore = styled((props) => {
 export default function RecipeReviewCard(props) {
     const classes = useStyles();
     const [pic, setPic] = React.useState("../image/mouse.jpg")
-
+    
 
     const handleCardClick = () =>{
         document.location.href = `/Commodity?CommodityId=${props.Data.Id}&StoreId=${props.Data.StoreId}`;
+        console.log(props)
     }
 
     return (
@@ -77,14 +78,14 @@ export default function RecipeReviewCard(props) {
                         <MoreVertIcon />
                     </IconButton>
                 }
-                title="羅技滑鼠"
+                title={props.Data.Name}
                 subheader="September 14, 2016"
             />
             <CardActionArea>
                 <CardMedia
                     component="img"
                     height="150"
-                    image="https://localhost:44387/api/User/getImage/mouse"
+                    image={props.Data.ImagePath}
                     onClick={handleCardClick}
                 />
                 <CardContent>

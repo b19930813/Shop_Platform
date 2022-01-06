@@ -67,14 +67,14 @@ namespace shop_server.Presenters
                 //result = "{\"type\": \"template\",\"altText\": \"this is a carousel template\",\"template\": {\"type\": \"carousel\",\"columns\": [{\"thumbnailImageUrl\": \"https://example.com/bot/images/item1.jpg\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"this is menu\",\"text\": \"description\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/123\"},\"actions\": [{\"type\": \"postback\",\"label\": \"Buy\",\"data\": \"action=buy&itemid=111\"},{\"type\": \"postback\",\"label\": \"Add to cart\",\"data\": \"action=add&itemid=111\"},{\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/111\"}]},{\"thumbnailImageUrl\": \"https://example.com/bot/images/item2.jpg\",\"imageBackgroundColor\": \"#000000\",\"title\": \"this is menu\",\"text\": \"description\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/222\"},\"actions\": [{\"type\": \"postback\",\"label\": \"Buy\",\"data\": \"action=buy&itemid=222\"},{\"type\": \"postback\",\"label\": \"Add to cart\",\"data\": \"action=add&itemid=222\"},{\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/222\"}]}],\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\"} }";
 
                 string PCMessage = list_ld[0].PCMessage;
-                string StartString = "{\"type\": \"template\",\"altText\": \"瀏覽項目\",\"template\": {\"type\": \"carousel\",\"columns\": [";
+                string StartString = "[{\"type\": \"template\",\"altText\": \"瀏覽項目\",\"template\": {\"type\": \"carousel\",\"columns\": [";
                 string ContextString = "";
                 foreach(LineData ld in list_ld)
                 {
                     ContextString += "{\"thumbnailImageUrl\": \"" +ld.ImagePath +"\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \""+ld.Title+"\",\"text\": \""+ld.Text+"\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \""+ld.ViewAction+"\"},\"actions\": [{\"type\": \"postback\",\"label\": \"立即下單\",\"data\": \""+ld.BuyAction+"\"},{\"type\": \"postback\",\"label\": \"加入購物車\",\"data\": \""+ld.AddToCarAction+"\"}]},";
                 }
                 ContextString = ContextString.TrimEnd(',');
-                string EndString = "],\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\"} }";
+                string EndString = "],\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\"}}]";
                 result = StartString + ContextString + EndString;
             }
             catch(Exception ex)

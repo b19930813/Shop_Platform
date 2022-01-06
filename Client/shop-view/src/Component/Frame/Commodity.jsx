@@ -153,12 +153,12 @@ export default function Commodity(props) {
 
     const handleBuyClick = event => {
         console.log(commodity)
-        if(loginState.userId != "" && loginState.isLogin){
+        // if(loginState.userId != "" && loginState.isLogin){
             
-        }
-        else{
-            setOpen(true);
-        }  
+        // }
+        // else{
+        //     setOpen(true);
+        // }  
     }
 
     const userCheck = () =>{
@@ -212,7 +212,7 @@ export default function Commodity(props) {
                     </div>
                 </div>
                 <div className={classes.commContext} >
-                    <img src={`https://localhost:44387/api/User/getImage/${commodity.ImagePath}`} style={{ "width": "300px", "height": "300px" }} />
+                    <img src={commodity.ImagePath} style={{ "width": "300px", "height": "300px" }} />
                 </div>
                 <br />
                 <div className={classes.desc}>

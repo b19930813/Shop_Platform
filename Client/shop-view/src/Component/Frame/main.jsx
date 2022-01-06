@@ -43,9 +43,73 @@ export default function Main() {
         Classification: "水果",
         Describe: "水果",
         Price: 100,
-        ImagePath: null,
+        ImagePath: "https://i.imgur.com/YDgZneA.jpg",
         StoreId: 1
     })
+    const [commodity1, setCommodity1] = React.useState({
+        Id: 2,
+        Name: "鍵盤",
+        Classification: "水果",
+        Describe: "水果",
+        Price: 100,
+        ImagePath: "https://i.imgur.com/J3YKs2y.jpg",
+        StoreId: 1
+    })
+    const [commodity2, setCommodity2] = React.useState({
+        Id: 3,
+        Name: "顯示卡",
+        Classification: "水果",
+        Describe: "水果",
+        Price: 100,
+        ImagePath: "https://i.imgur.com/N8d9itX.jpg",
+        StoreId: 1
+    })
+    const [commodity3, setCommodity3] = React.useState({
+        Id: 4,
+        Name: "Air Pods",
+        Classification: "水果",
+        Describe: "水果",
+        Price: 100,
+        ImagePath: "https://i.imgur.com/jDAL8qO.jpg",
+        StoreId: 1
+    })
+    const [commodity4, setCommodity4] = React.useState({
+        Id: 5,
+        Name: "USB隨身碟",
+        Classification: "水果",
+        Describe: "水果",
+        Price: 100,
+        ImagePath: "https://i.imgur.com/uNm2HkQ.jpg",
+        StoreId: 1
+    })
+    const [commodity5, setCommodity5] = React.useState({
+        Id: 6,
+        Name: "有線耳機",
+        Classification: "水果",
+        Describe: "水果",
+        Price: 100,
+        ImagePath: "https://i.imgur.com/WrhFWFj.jpg",
+        StoreId: 1
+    })
+    const [commodity6, setCommodity6] = React.useState({
+        Id: 7,
+        Name: "行動電源",
+        Classification: "水果",
+        Describe: "水果",
+        Price: 100,
+        ImagePath: "https://i.imgur.com/6C3Gdfz.png",
+        StoreId: 1
+    })
+    const [commodity7, setCommodity7] = React.useState({
+        Id: 8,
+        Name: "Iphone",
+        Classification: "水果",
+        Describe: "水果",
+        Price: 100,
+        ImagePath: "https://i.imgur.com/1VNEG8H.png",
+        StoreId: 1
+    })
+
     React.useEffect(() => {
         axios.get('api/Commodity/GetRecommendCard', config)
             .then(response => {
@@ -70,25 +134,25 @@ export default function Main() {
                     <Card Data={commodity} />
                 </div >
                 <div className={classes.Card}>
-                    <Card CommodityId={2} />
+                    <Card Data={commodity1} />
                 </div >
                 <div className={classes.Card}>
-                    <Card CommodityId={3} />
+                    <Card Data={commodity2} />
                 </div >
-                <Card CommodityId={4} />
+                <Card Data={commodity3} />
             </div>
             <div className={classes.context}>
                 <h1 className={classes.SpcText}>優惠商品</h1>
                 <div className={classes.Card}>
-                    <Card Data={1} />
+                    <Card Data={commodity4} />
                 </div >
                 <div className={classes.Card}>
-                    <Card Data={1} />
+                    <Card Data={commodity5} />
                 </div >
                 <div className={classes.Card}>
-                    <Card Data={1} />
+                    <Card Data={commodity6} />
                 </div >
-                <Card Data={1} />
+                <Card Data={commodity7} />
             </div>
         </div>
     );

@@ -62,17 +62,13 @@ namespace shop_server.Controllers
 
 
 
-                // string jsonS = "[{\"type\": \"template\",\"altText\": \"This is a buttons template\",\"template\": {\"type\": \"buttons\",\"thumbnailImageUrl\": \"https://i.imgur.com/YKDNQXU.jpg\",\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"Menu\",\"text\": \"Please select\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/123\"},\"actions\": [{\"type\": \"postback\",\"label\": \"Buy\",\"data\": \"action=buy&itemid=123\"},{\"type\": \"postback\",\"label\": \"Add to cart\",\"data\": \"action=add&itemid=123\"}]}}]";
+                 string jsonS = "[{\"type\": \"template\",\"altText\": \"This is a buttons template\",\"template\": {\"type\": \"buttons\",\"thumbnailImageUrl\": \"https://i.imgur.com/YKDNQXU.jpg\",\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"Menu\",\"text\": \"Please select\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/123\"},\"actions\": [{\"type\": \"postback\",\"label\": \"Buy\",\"data\": \"action=buy&itemid=123\"},{\"type\": \"postback\",\"label\": \"Add to cart\",\"data\": \"action=add&itemid=123\"}]}}]";
                 //依照用戶說的特定關鍵字來回應
 
                 //先找關鍵字比對，再找包含
                 if (LT.Message == "取得個人資料")
                 {
                     bot.ReplyMessage(LT.ReplyToken, $"User ID = [{LT.UserID}]");
-                }
-                else if (LT.Message == "查看訂單")
-                {
-                    bot.ReplyMessage(LT.ReplyToken, $"查看訂單");
                 }
                 else if (LT.Message.Contains("搜尋商品"))
                 {
@@ -93,7 +89,7 @@ namespace shop_server.Controllers
                                     Title = c.Name,
                                     Text = "歡迎下單",
                                     PCMessage = "請到手機板Line上觀看訊息喔!",
-                                    ImagePath = $"{System.Environment.CurrentDirectory}\\Images\\{c.ImagePath}.jpg",
+                                    ImagePath = c.ImagePath,
                                     //AddToCarAction = "{\"StoreId\" : \""+c.Store.StoreId+"\",\"CommodityId\" : \""+c.CommodityId+"\"}",
                                     AddToCarAction = $"Add {c.CommodityId}",
                                     BuyAction = $"Buy {c.CommodityId}",
@@ -115,7 +111,8 @@ namespace shop_server.Controllers
                 }
                 else if (LT.Message == "查看訂單") //Order
                 {
-                    commoditiesList = _context.Users.Where(u => u.LineID == LT.UserID).Include(u=>u.Order).Include(o=>o.Order.Commodities).FirstOrDefault().Order.Commodities.ToList();
+                    user = _context.Users.Where(u => u.LineID == LT.UserID).Include(u=>u.Order).FirstOrDefault();
+                    commoditiesList = (List<Commodity>)_context.Commodities.Where(c => c.Order.OrderId == user.Order.OrderId);
                     List<LineData> lineList = new List<LineData>();
                     foreach(var c in commoditiesList)
                     {
@@ -124,7 +121,7 @@ namespace shop_server.Controllers
                             Title = c.Name,
                             Text = "購買項目",
                             PCMessage = "請到手機板Line上觀看訊息喔!",
-                            ImagePath = $"{System.Environment.CurrentDirectory}\\Images\\{c.ImagePath}.jpg",                           
+                            ImagePath = $"https://i.imgur.com/YDgZneA.jpg",                           
                             ViewAction = $"http://localhost:3000/Commodity?CommodityId={c.CommodityId}&StoreId={c.Store.StoreId}",
                         });
                     }
@@ -153,6 +150,7 @@ namespace shop_server.Controllers
                             TotalConsume = Money
                         });
                         await _context.SaveChangesAsync();
+                        bot.ReplyMessage(LT.ReplyToken, "輸入格式不正確");
                     }
                     else
                     {
@@ -184,6 +182,65 @@ namespace shop_server.Controllers
                     else
                     {
                         bot.ReplyMessage(LT.ReplyToken, "輸入格式不正確");
+                    }
+                }
+                else if (LT.Message.Contains("優惠"))  //按鈕指令
+                {
+                    //json 解析
+                    var c_list = _context.Commodities.Take(4).ToList();
+                    if (c_list.Count != 0)
+                    {
+                        List<LineData> lineList = new List<LineData>();
+                        foreach (var c in c_list)
+                        {
+                            lineList.Add(new LineData
+                            {
+                                Title = c.Name,
+                                Text = "歡迎下單",
+                                PCMessage = "請到手機板Line上觀看訊息喔!",
+                                ImagePath = c.ImagePath,
+                                //AddToCarAction = "{\"StoreId\" : \""+c.Store.StoreId+"\",\"CommodityId\" : \""+c.CommodityId+"\"}",
+                                AddToCarAction = $"Add {c.CommodityId}",
+                                BuyAction = $"Buy {c.CommodityId}",
+                                ViewAction = $"http://localhost:3000/Commodity?CommodityId={c.CommodityId}&StoreId=1",
+                            });
+                        }
+                        string template = LineTrans.CreateBuyTemplate(lineList);
+                        bot.ReplyMessageWithJSON(LT.ReplyToken, template);
+                    }
+                    else
+                    {
+                        bot.ReplyMessage(LT.ReplyToken, $"暫無優惠商品喔!");
+                    }
+                }
+                else if (LT.Message.Contains("推薦"))  //按鈕指令
+                {
+                    //json 解析
+                    int Count = _context.Commodities.Count();
+                    var c_list = _context.Commodities.Skip(Math.Max(0, Count - 4)).ToList();
+                    if (c_list.Count != 0)
+                    {
+                        List<LineData> lineList = new List<LineData>();
+                        foreach (var c in c_list)
+                        {
+                            lineList.Add(new LineData
+                            {
+                                Title = c.Name,
+                                Text = "歡迎下單",
+                                PCMessage = "請到手機板Line上觀看訊息喔!",
+                                ImagePath = c.ImagePath,
+                                //AddToCarAction = "{\"StoreId\" : \""+c.Store.StoreId+"\",\"CommodityId\" : \""+c.CommodityId+"\"}",
+                                AddToCarAction = $"Add {c.CommodityId}",
+                                BuyAction = $"Buy {c.CommodityId}",
+                                ViewAction = $"http://localhost:3000/Commodity?CommodityId={c.CommodityId}&StoreId=1",
+                            });
+                        }
+                        string template = LineTrans.CreateBuyTemplate(lineList);
+                        bot.ReplyMessageWithJSON(LT.ReplyToken, template);
+                    }
+                    else
+                    {
+                        bot.ReplyMessage(LT.ReplyToken, $"暫無優惠商品喔!");
                     }
                 }
                 else

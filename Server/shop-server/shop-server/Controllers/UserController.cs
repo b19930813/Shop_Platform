@@ -249,6 +249,17 @@ namespace shop_server.Controllers
             return File(b, "image/jpeg");
         }
 
+        [Route("GetJpg/{Id}.jpg")]
+        [HttpGet]
+        public async Task<IActionResult> GetJpg(string Id)
+        {
+            Byte[] b = null;
+
+            b = System.IO.File.ReadAllBytes($"{System.Environment.CurrentDirectory}\\Images\\{Id}.jpg");   // You can use your own method over here.         
+
+            return File(b, "image/jpeg");
+        }
+
         [Route("UserComfirm/{Id}")]
         [HttpPost]
         public async Task<IActionResult> UserComfirm(int Id)

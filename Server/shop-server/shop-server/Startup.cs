@@ -75,9 +75,16 @@ namespace shop_server
             //Find Store
             Store store =  _shop.Stores.Find(1);
 
-            _shop.Commodities.Add(new Commodity { Name = "滑鼠", Classification = "電器用品", ImagePath = "mouse", Price = 300, CreatedDate = DateTime.Now , Store = store, Describe = "有線滑鼠，歡迎下標"});
-            _shop.Commodities.Add(new Commodity { Name = "滑鼠", Classification = "電器用品", ImagePath = "mouse", Price = 300, CreatedDate = DateTime.Now, Store = store, Describe = "有線滑鼠，歡迎下標" });
-            _shop.Commodities.Add(new Commodity { Name = "鍵盤", Classification = "電器用品", ImagePath = "keyboard", Price = 500, CreatedDate = DateTime.Now, Store = store, Describe = "有線鍵盤，歡迎下標" });
+            _shop.Commodities.Add(new Commodity { Name = "滑鼠", Classification = "電器用品", ImagePath = "https://i.imgur.com/YDgZneA.jpg", Price = 300, CreatedDate = DateTime.Now , Store = store, Describe = "歡迎下標"});
+            _shop.Commodities.Add(new Commodity { Name = "鍵盤", Classification = "電器用品", ImagePath = "https://i.imgur.com/J3YKs2y.jpg", Price = 500, CreatedDate = DateTime.Now, Store = store, Describe = "歡迎下標" });
+            _shop.Commodities.Add(new Commodity { Name = "顯示卡", Classification = "電器用品", ImagePath = "https://i.imgur.com/N8d9itX.jpg", Price = 3000, CreatedDate = DateTime.Now, Store = store, Describe = "歡迎下標" });
+            _shop.Commodities.Add(new Commodity { Name = "Air Pods", Classification = "電器用品", ImagePath = "https://i.imgur.com/jDAL8qO.jpg", Price = 6000, CreatedDate = DateTime.Now, Store = store, Describe = "歡迎下標" });
+            _shop.Commodities.Add(new Commodity { Name = "USB隨身碟", Classification = "電器用品", ImagePath = "https://i.imgur.com/uNm2HkQ.jpg", Price = 3000, CreatedDate = DateTime.Now, Store = store, Describe = "歡迎下標" });
+            _shop.Commodities.Add(new Commodity { Name = "有線耳機", Classification = "電器用品", ImagePath = "https://i.imgur.com/WrhFWFj.jpg", Price = 3000, CreatedDate = DateTime.Now, Store = store, Describe = "歡迎下標" });
+            _shop.Commodities.Add(new Commodity { Name = "行動電源", Classification = "電器用品", ImagePath = "https://i.imgur.com/6C3Gdfz.png", Price = 3000, CreatedDate = DateTime.Now, Store = store, Describe = "歡迎下標" });
+            _shop.Commodities.Add(new Commodity { Name = "Iphone", Classification = "電器用品", ImagePath = "https://i.imgur.com/1VNEG8H.png", Price = 38500, CreatedDate = DateTime.Now, Store = store, Describe = "歡迎下標" });
+            _shop.Commodities.Add(new Commodity { Name = "平板電腦", Classification = "電器用品", ImagePath = "https://i.imgur.com/kKl0H6G.jpg", Price = 16500, CreatedDate = DateTime.Now, Store = store, Describe = "歡迎下標" });
+            _shop.Commodities.Add(new Commodity { Name = "switch", Classification = "電器用品", ImagePath = "https://i.imgur.com/S8ALmTn.jpg", Price = 12000, CreatedDate = DateTime.Now, Store = store, Describe = "歡迎下標" });
 
             _shop.SaveChanges(); //SaveChanges要分別下，不然連DB的時候會掛掉
         }
