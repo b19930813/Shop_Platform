@@ -314,6 +314,8 @@ export default function PrimarySearchAppBar() {
 
   const handleLogout = () => {
     localStorage.setItem("userId","");
+    localStorage.setItem("storeId","");
+    localStorage.setItem("userName","");
     window.location.reload()
     handleMenuClose();
   }
