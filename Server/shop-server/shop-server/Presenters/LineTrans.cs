@@ -90,14 +90,14 @@ namespace shop_server.Presenters
             try
             {
                 string PCMessage = list_ld[0].PCMessage;
-                string StartString = "{\"type\": \"template\",\"altText\": \"瀏覽項目\",\"template\": {\"type\": \"carousel\",\"columns\": [";
+                string StartString = "[{\"type\": \"template\",\"altText\": \"瀏覽項目\",\"template\": {\"type\": \"carousel\",\"columns\": [";
                 string ContextString = "";
                 foreach (LineData ld in list_ld)
                 {
-                    ContextString += "{\"thumbnailImageUrl\": \"" + ld.ImagePath + "\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"" + ld.Title + "\",\"text\": \"" + ld.Text + "\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"" + ld.ViewAction + "\"},\"actions\": [{\"type\": \"uri\",\"label\": \"瀏覽商品\",\"uri\": \"" + ld.ViewAction + "\"}]},";
+                    ContextString += "{\"thumbnailImageUrl\": \"" + ld.ImagePath + "\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"" + ld.Title + "\",\"text\": \"" + ld.Text + "\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"" + ld.ViewAction + "\"},\"actions\": [{\"type\": \"postback\",\"label\": \"查看商品\",\"data\": \"" + ld.BuyAction + "\"},{\"type\": \"postback\",\"label\": \"查看狀態\",\"data\": \"" + ld.AddToCarAction + "\"}]},";
                 }
                 ContextString = ContextString.TrimEnd(',');
-                string EndString = "],\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\"} }";
+                string EndString = "],\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\"}}]";
                 result = StartString + ContextString + EndString;
             }
             catch (Exception ex)

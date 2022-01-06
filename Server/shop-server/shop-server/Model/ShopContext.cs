@@ -26,6 +26,10 @@ namespace shop_server.Model
                 .WithOne(b => b.Users)
                 .HasForeignKey<BuyList>(b => b.UserId);
 
+            modelBuilder.Entity<User>()
+               .HasOne(u => u.Order)
+               .WithOne(b => b.User);
+
             //使用者跟商店是一對多
             modelBuilder.Entity<User>()
                  .HasMany(u => u.Stores)

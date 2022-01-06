@@ -17,7 +17,6 @@ namespace shop_server.Model
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 
-        [ForeignKey("UserId")]
         public int UserId { get; set; }
         public User User { get; set; }
         //public int UserId { get; set; }

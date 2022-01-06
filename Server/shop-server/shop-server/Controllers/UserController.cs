@@ -147,6 +147,7 @@ namespace shop_server.Controllers
                     _context.Users.Add(user);
 
                     await _context.SaveChangesAsync();
+                    _context.Orders.Add(new Order { User = user, UserId = user.UserId });
                     return CreatedAtAction("PostUser", new { id = user.UserId }, user);
                 }
                 else

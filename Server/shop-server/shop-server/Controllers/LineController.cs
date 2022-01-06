@@ -111,22 +111,38 @@ namespace shop_server.Controllers
                 }
                 else if (LT.Message == "查看訂單") //Order
                 {
-                    user = _context.Users.Where(u => u.LineID == LT.UserID).Include(u=>u.Order).FirstOrDefault();
-                    commoditiesList = (List<Commodity>)_context.Commodities.Where(c => c.Order.OrderId == user.Order.OrderId);
-                    List<LineData> lineList = new List<LineData>();
-                    foreach(var c in commoditiesList)
+                    try
                     {
-                        lineList.Add(new LineData
+                        user = _context.Users.Where(u => u.LineID == LT.UserID).Include(u => u.Order).FirstOrDefault();
+                        commoditiesList = _context.Commodities.Where(c => c.Order.OrderId == user.Order.OrderId).ToList();
+                        List<LineData> lineList = new List<LineData>();
+                        if (commoditiesList.Count != 0)
                         {
-                            Title = c.Name,
-                            Text = "購買項目",
-                            PCMessage = "請到手機板Line上觀看訊息喔!",
-                            ImagePath = $"https://i.imgur.com/YDgZneA.jpg",                           
-                            ViewAction = $"http://localhost:3000/Commodity?CommodityId={c.CommodityId}&StoreId={c.Store.StoreId}",
-                        });
+                            foreach (var c in commoditiesList)
+                            {
+                                lineList.Add(new LineData
+                                {
+                                    Title = c.Name,
+                                    Text = "購買項目",
+                                    PCMessage = "請到手機板Line上觀看訊息喔!",
+                                    BuyAction = $"GetComm {c.CommodityId}",
+                                    AddToCarAction = "GetState",
+                                    ImagePath = c.ImagePath,
+                                    ViewAction = $"http://localhost:3000/Commodity?CommodityId={c.CommodityId}&StoreId={1}",
+                                });
+                            }
+                            string template = LineTrans.CreateViewTemplate(lineList);
+                            bot.ReplyMessageWithJSON(LT.ReplyToken, template);
+                        }
+                        else
+                        {
+                            bot.ReplyMessage(LT.ReplyToken, "目前沒有下單喔!");
+                        }
                     }
-                    string template = LineTrans.CreateBuyTemplate(lineList);
-                    bot.ReplyMessageWithJSON(LT.ReplyToken, template);
+                    catch
+                    {
+                        bot.ReplyMessage(LT.ReplyToken, "目前沒有下單喔!");
+                    }
                 }
                 else if (LT.Message.Contains("Buy"))  //按鈕指令
                 {
@@ -140,17 +156,25 @@ namespace shop_server.Controllers
                         user = _context.Users.Where(u => u.LineID == LT.UserID).FirstOrDefault();
                         var commodityCollection = _context.Commodities.Where(c => c.CommodityId == Convert.ToInt32(CommodityId)).ToList();
                         int Money = commodityCollection.Sum(c => c.Price);
-
-                        _context.Orders.Add(new Order
+                        Order order = _context.Orders.Where(o => o.User.LineID == LT.UserID).Include(o => o.Commodities).FirstOrDefault();
+                        if(order == null)
                         {
-                            User = user,
-                            UserId = user.UserId,
-                            CreatedDate = DateTime.Now,
-                            Commodities = commodityCollection,
-                            TotalConsume = Money
-                        });
+                            _context.Orders.Add(new Order
+                            {
+                                User = user,
+                                UserId = user.UserId,
+                                CreatedDate = DateTime.Now,
+                                Commodities = commodityCollection,
+                                TotalConsume = Money,
+                                Status = "已下單"
+                            });
+                        }
+                        else
+                        {
+                            order.Commodities.Add(commodityCollection[0]);
+                        }
                         await _context.SaveChangesAsync();
-                        bot.ReplyMessage(LT.ReplyToken, "輸入格式不正確");
+                        bot.ReplyMessage(LT.ReplyToken, $"下單成功 , 商品名稱 {commodityCollection[0].Name}");
                     }
                     else
                     {
@@ -242,6 +266,28 @@ namespace shop_server.Controllers
                     {
                         bot.ReplyMessage(LT.ReplyToken, $"暫無優惠商品喔!");
                     }
+                }
+                else if(LT.Message.Contains("GetComm"))
+                {
+                    string GetCommStr = LT.Message;
+                    string[] CommArray = GetCommStr.Split(' ');
+                    if (CommArray.Length == 2)
+                    {
+                        CommodityId = CommArray[1];
+                        //Find User and Commodity
+                        var commodityCollection = _context.Commodities.Where(c => c.CommodityId == Convert.ToInt32(CommodityId)).FirstOrDefault();
+                        int Money = commodityCollection.Price;
+
+                        bot.ReplyMessage(LT.ReplyToken, $"商品名稱:{commodityCollection.Name}\r\n 商品價格:{commodityCollection.Price}");
+                    }
+                    else
+                    {
+                        bot.ReplyMessage(LT.ReplyToken, "輸入格式不正確");
+                    }
+                }
+                else if(LT.Message == "GetState")
+                {
+                    bot.ReplyMessage(LT.ReplyToken, "運送中");
                 }
                 else
                 {
