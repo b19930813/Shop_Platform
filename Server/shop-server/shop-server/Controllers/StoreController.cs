@@ -176,13 +176,13 @@ namespace shop_server.Controllers
                 {
                      Commodity commodity = await _context.Commodities.FindAsync(Convert.ToInt32(CommodityId));
                     //Store store = await _context.Stores.FindAsync(Convert.ToInt32(StoreId));
-                    Store store = _context.Stores.Where(r => r.StoreId == Convert.ToInt32(StoreId)).Include(r => r.Commodities).SingleOrDefault();
+                    //Store store = _context.Stores.Where(r => r.StoreId == Convert.ToInt32(StoreId)).Include(r => r.Commodities).SingleOrDefault();
                     //var CInformation = _context.Stores.Find(Convert.ToInt32(StoreId)).Commodities.Where(c => c.Name == CommodityName).ToList();
                     //var CInformation = _context.Commodities.Where(c => c.CommodityId == Convert.ToInt32(CommodityId)).Include(c => c.Store).FirstOrDefault();
 
                     if (commodity != null)
                     {
-                        int CommCount = store.Commodities.Count(s => s.Name == commodity.Name);
+                        int CommCount = 1;
                         //int CommCount = store.Commodities.ToList().Count(s => s.Name == commodity.Name);
                         return Ok
                             (new 
@@ -258,23 +258,45 @@ namespace shop_server.Controllers
         //}
         [Route("GetCommodityByStoreId/{in_StoreId}")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Commodity>>> GetCommodityByStoreId(int in_StoreId)
+        public async Task<ActionResult> GetCommodityByStoreId(int in_StoreId)
         //public async Task<ActionResult> GetCommodityByStoreId(int in_StoreId)
         {
             try
             {
-                List<Commodity> commodity = _context.Commodities.Where(r => r.Store.StoreId == in_StoreId).ToList();
-                //不知道怎麼Groupby 求救
-                //List<Commodity> commodity = _context.Commodities.Where(r => r.Store.StoreId == in_StoreId).GroupBy(r => r.Name).ToList();
-
-                if (commodity == null)
+                Store store = _context.Stores.Find(in_StoreId);
+                if (store != null)
                 {
-                    return NotFound();
+                     store = _context.Stores.Where(s => s.StoreId == in_StoreId).Include(s => s.Commodities).SingleOrDefault();
+                    //user = _context.Users.Find(in_UserId);
+                    if (store.Commodities.Count != 0)
+                    {
+                        //return Ok(new { status = 200, IsSuccess = true, orderList = orderList, commoditiesList = commoditiesList });
+                        //return Ok(new { status = 200, IsSuccess = true, orderList = orderList, commoditiesList = order.Commodities });
+                        //var tmpList =
+                        // return Ok(new { status = 200, IsSuccess = true, buyList = user.BuyLists, commoditiesList = user.BuyLists.Commodities });
+                        return Ok(new
+                        {
+                            status = 200,
+                            IsSuccess = true,
+                            message = store.Commodities.Select(c => new {
+                                c.Name,
+                                c.Price,
+                                c.Describe,
+                                c.ImagePath
+                            })
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new { status = 200, IsSuccess = false, message = "目前購物車是空的喔!" });
+                    }
                 }
-
-                return commodity;
+                else
+                {
+                    return Ok(new { status = 200, IsSuccess = false, message = "找不到User!" });
+                }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 throw;
             }

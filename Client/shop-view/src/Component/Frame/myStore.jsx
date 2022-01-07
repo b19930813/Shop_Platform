@@ -1,7 +1,8 @@
 import * as React from 'react';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Divider from '@material-ui/core/Divider';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { makeStyles } from '@material-ui/core';
@@ -65,60 +66,81 @@ export default function ControlledAccordions() {
   ])
 
   React.useEffect(() => {
-    if (storeId=="")
-    {
-      return;
-    }
-
+    var tempData = []
     axios.get('api/Store/GetCommodityByStoreId/' + storeId, config)
       .then(response => {
         console.log(response)
-        var tempData = []
+        if (response.data.isSuccess) {
+          response.data.message.forEach(r => {
+            tempData.push(r)
+          });
+        }
 
-        response.data.forEach(r => {
-          tempData.push(r)
-        });
         setRows(tempData);
-        console.log("tempData", tempData);
-        console.log("rows", rows);
       })
   }, [])
+
+  let showResult = () => {
+    var view = ""
+    console.log(`rows = ${rows}`)
+    if (rows.length != 0) {
+      view = rows.map((row) => (
+        <ExpansionPanel>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1bh-content"
+            id="panel1bh-header"
+          >
+            <Typography sx={{ width: '33%', flexShrink: 0 }}>{`總價格 : ${row.price} 元`}</Typography>
+          </ExpansionPanelSummary>
+          <Divider />
+          <ExpansionPanelDetails>
+            <Typography>
+              <div className={classes.commContext} >
+                <img src={row.imagePath} style={{ "width": "150px", "height": "150px" }} />
+              </div>
+              <div className={classes.desc}>
+                <div style={{ "border:": "2px #DCDCDC solid" }}>
+                  {`商品名稱 : ${row.name}`}
+                </div>
+              </div>
+              <div className={classes.desc}>
+                <div style={{ "border:": "2px #DCDCDC solid" }}>
+                  {`商品描述 : ${row.describe}`}
+                </div>
+              </div>
+              <div className={classes.desc}>
+                <div style={{ "border:": "2px #DCDCDC solid" }}>
+                  {`數量 : ${1}`}
+                </div>
+              </div>
+              <div className={classes.desc}>
+                <div style={{ "border:": "2px #DCDCDC solid" }}>
+                  {`商品金額 : ${1 * row.price}`}
+                </div>
+              </div>
+            </Typography>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      ))
+    }
+    else {
+      view = <p>商品是空的喔! 來賣東西吧!</p>
+    }
+    return view
+  }
+
 
   return (
     <div className={classes.context}>
       <div>
         <h1 style={{ 'display': 'inline-block' }}>{`${userName}的商店`}</h1>
-        <Button color="warning" variant="contained" style={{ 'float': 'right', 'marginTop': '3%' }} onClick={handleCreateStoreClick} >建立賣場</Button>
+        {/* <Button color="warning" variant="contained" style={{ 'float': 'right', 'marginTop': '3%' }} onClick={handleCreateStoreClick} >建立賣場</Button> */}
         <Button color="warning" variant="contained" style={{ 'float': 'right', 'marginTop': '3%' }} onClick={handleAddClick} >加入商品</Button>
       </div>
-      {rows.map((row) => (
-        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1bh-content"
-            id="panel1bh-header"
-          >
-            <Typography sx={{ width: '33%', flexShrink: 0 }}>
-              {`商品名稱 : ${row.name}`}
-            </Typography>
-            <Typography sx={{ width: '33%', flexShrink: 0 }}>{`商品價格 : ${row.price} 元`}</Typography>
-            <Typography sx={{ width: '33%', flexShrink: 0 }}>{`庫存數量 : 1`}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              <div className={classes.Text}>
-                <p>{`商品敘述 : ${row.describe}`}</p>
-              </div>
-              <div className={classes.imageClass}>
-                <img src={`https://localhost:44387/api/User/getImage/${row.imagePath}`} style={{ "width": "150px", "height": "150px" }} />
-              </div>
-
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        ))}
+      {showResult()}
       <Stack spacing={2}>
-        <Pagination count={10} color="secondary" className={classes.pageCenter} />
+        <Pagination count={1} color="secondary" className={classes.pageCenter} />
       </Stack>
     </div>
   );

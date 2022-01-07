@@ -168,24 +168,38 @@ namespace shop_server.Controllers
         //public async Task<ActionResult<IEnumerable<Order>>> GetOrderByUserId(int in_UserId)
         public async Task<ActionResult> GetOrderByUserId(int in_UserId)
         {
-            User user = null;
             List<Order> orderList = null;
             Order order = null;
             List<Commodity> commoditiesList = null;
             try
             {
-                //user = _context.Users.Where(u => u.UserId == in_UserId).FirstOrDefault();
-                //orderList = await _context.Orders.Where(r => r.User == user).ToListAsync();
-                //order = _context.Orders.Where(o => o.User == user).FirstOrDefault();
-
-                //commoditiesList = _context.Commodities.Where(c => c.Order == order).ToList();
-                commoditiesList = _context.Commodities.Where(c => c.Order.UserId == in_UserId).ToList();
-                //order = user.Order
-                //commoditiesList = await _context.Commodities.Where(c => c.Order.OrderId == user.Order.OrderId).ToListAsync();
-                //commoditiesList = await _context.Commodities.Where(c => c.Order.OrderId == order.OrderId).Include(o=>o.Order).ToListAsync();
-                //commoditiesList = order.Commodities.ToList();
-
-                //if (order.Commodities.Count != 0)
+                User user = _context.Users.Find(in_UserId);
+                if(user != null)
+                {
+                    user = _context.Users.Where(u => u.UserId == in_UserId).Include(u => u.Order).Include(u => u.Order.Commodities).SingleOrDefault();
+                    if(user.Order.Commodities.Count != 0)
+                    {
+                        return Ok(new
+                        {
+                            status = 200,
+                            IsSuccess = true,
+                            message = user.Order.Commodities.Select(c => new {
+                                c.Name,
+                                c.Price,
+                                c.Describe,
+                                c.ImagePath
+                            })
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new { status = 200, IsSuccess = false, message = "沒有購買項目!!!" });
+                    }
+                }
+                else
+                {
+                    return Ok(new { status = 200, IsSuccess = false, message = "找不到User!" });
+                }
                 if (user.Order.Commodities.Count != 0)
                 {
                     //return Ok(new { status = 200, IsSuccess = true, orderList = orderList, commoditiesList = commoditiesList });

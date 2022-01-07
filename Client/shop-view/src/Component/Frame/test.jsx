@@ -184,14 +184,7 @@ export default function Test() {
 
     //查詢目前使用者的訂單
     const handleQueryCurrUserOrderClick = () => {
-        //axios.get(`'api/Order/GetOrder/${props.userData.id}'`, config)
-        console.log(userId);
-        console.log('api/Order/GetOrderByUserId/' + userId);
-        axios.get('api/Order/GetOrderByUserId/' + userId, config)
-            .then(response => {
-                console.log(response)
-            })
-        console.log("查詢目前使用者的訂單");
+        setTimeout("document.location.href = '/'",2000);
     }
 
 

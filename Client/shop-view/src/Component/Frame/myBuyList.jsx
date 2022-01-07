@@ -1,10 +1,11 @@
 import * as React from 'react';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { makeStyles } from '@material-ui/core';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Divider from '@material-ui/core/Divider';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import axios from 'axios';
@@ -33,65 +34,77 @@ export default function BuyList() {
 
   const [rows, setRows] = React.useState([
   ])
-
   React.useEffect(() => {
     axios.get('api/BuyList/GetBuyListByUserId/' + userId, config)
       .then(response => {
         console.log(response)
         var tempData = []
-
-        response.data.forEach(r => {
-          tempData.push(r)
-        });
+        
+        if(response.data.isSuccess){
+          response.data.message.forEach(r => {
+            tempData.push(r)
+          });
+        }
         setRows(tempData);
-        console.log("tempData", tempData);
-        console.log("rows", rows);
       })
   }, [])
 
-  return (
-    <div className={classes.context}>
-      <h1>{`${userName}的購買清單`}</h1>
-      {rows.map((row) => (
-        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-          <AccordionSummary
+  let showResult = () =>{
+    var view = ""
+    console.log(`rows = ${rows}`)
+    if(rows.length !=0){
+      view = rows.map((row) => (
+        <ExpansionPanel>
+          <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
           >
             <Typography sx={{ width: '33%', flexShrink: 0 }}>{`總價格 : ${row.price} 元`}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
+          </ExpansionPanelSummary>
+          <Divider />
+          <ExpansionPanelDetails>
             <Typography>
               <div className={classes.commContext} >
-                <img src={`https://localhost:44387/api/User/getImage/${row.ImagePath}`} style={{ "width": "150px", "height": "150px" }} />
+                <img src={row.imagePath} style={{ "width": "150px", "height": "150px" }} />
               </div>
               <div className={classes.desc}>
                 <div style={{ "border:": "2px #DCDCDC solid" }}>
-                  {`商品名稱 : ${row.Name}`}
+                  {`商品名稱 : ${row.name}`}
                 </div>
               </div>
               <div className={classes.desc}>
                 <div style={{ "border:": "2px #DCDCDC solid" }}>
-                  {`商品描述 : ${row.Descrite}`}
+                  {`商品描述 : ${row.describe}`}
                 </div>
               </div>
               <div className={classes.desc}>
                 <div style={{ "border:": "2px #DCDCDC solid" }}>
-                  {`數量 : ${row.Count}`}
+                  {`數量 : ${1}`}
                 </div>
               </div>
               <div className={classes.desc}>
                 <div style={{ "border:": "2px #DCDCDC solid" }}>
-                  {`商品金額 : ${row.Count * row.Price}`}
+                  {`商品金額 : ${1 * row.price}`}
                 </div>
               </div>
             </Typography>
-          </AccordionDetails>
-        </Accordion>
-      ))}
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      ))
+    }
+    else{
+      view = <p>購物車是空的喔! 快去找喜歡的商品吧!</p>
+    }
+    return view
+  }
+
+  return (
+    <div className={classes.context}>
+      <h1>{`${userName}的購物車`}</h1>
+      {showResult()}
       <Stack spacing={2}>
-        <Pagination count={10} color="secondary" className={classes.pageCenter} />
+        <Pagination count={1} color="secondary" className={classes.pageCenter} />
       </Stack>
     </div>
   );

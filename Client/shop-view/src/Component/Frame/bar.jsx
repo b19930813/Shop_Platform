@@ -36,7 +36,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import axios from 'axios';
 import { config } from '../../api/config'
 import FeedIcon from '@mui/icons-material/Feed';
-
+import StoreIcon from '@mui/icons-material/Store';
+import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import PeopleIcon from '@mui/icons-material/People';
+import MessageIcon from '@mui/icons-material/Message';
 
 const useStyles = makeStyles(theme => ({
 
@@ -127,7 +131,26 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-
+function geticon(index){
+  if(index == 0){
+    return(<StoreIcon/>);
+  }
+  else if(index == 1){
+    return(<LocalGroceryStoreIcon/>);
+  }
+  else if(index == 2){
+    return (<LocalOfferIcon/>)
+  }
+  else if(index == 3){
+     return (<PeopleIcon/>)
+  }
+  else if(index == 4){
+    return (<MessageIcon/>)
+  }
+  else{
+    return(<MailIcon/>)
+  }
+}
 
 
 export default function PrimarySearchAppBar() {
@@ -139,6 +162,8 @@ export default function PrimarySearchAppBar() {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [state, setState] = React.useState(false);
   const [loginState , setLoginState] = React.useState(false)
+  const [search , setSearch] = React.useState("")
+
 
   React.useEffect(() => {
     //取得Login 狀態
@@ -253,10 +278,10 @@ export default function PrimarySearchAppBar() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {['我的賣場', '我的購物車', '訂單資訊', '關注的賣場', '交易歷史紀錄'].map((text, index) => (
+        {['我的賣場', '我的購物車', '訂單資訊'].map((text, index) => (
           <ListItem button key={text} onClick={() => transPage(text)}>
             <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            {geticon(index)}
             </ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
@@ -267,7 +292,7 @@ export default function PrimarySearchAppBar() {
         {['個人資料', 'Line Bot資訊'].map((text, index) => (
           <ListItem button key={text} onClick={() => transPage(text)}>
             <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            {geticon(index+3)}
             </ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
@@ -320,7 +345,23 @@ export default function PrimarySearchAppBar() {
     handleMenuClose();
   }
 
+  const handleTextChange = event =>{
+    setSearch(event.target.value)
+  }
 
+  const handleSearchEnter = event =>{
+    if(event.key === 'Enter')
+    axios.get(`api/Commodity/Search/${search}`, config)
+    .then(response => {
+      if (response.data.isSuccess) {
+          //取得 comm ID
+          document.location.href = `/Commodity?CommodityId=${response.data.message}&StoreId=${1}`;
+      }
+      else{
+        alert("找不到商品!")
+      }
+    })
+  }
 
   const handleClick = event =>{
     console.log(event.target.id)
@@ -443,6 +484,8 @@ export default function PrimarySearchAppBar() {
             <StyledInputBase
               placeholder="尋找商城"
               inputProps={{ 'aria-label': 'search' }}
+              onChange={handleTextChange}
+              onKeyDown={handleSearchEnter}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />

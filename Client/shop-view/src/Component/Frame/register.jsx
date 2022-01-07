@@ -89,11 +89,11 @@ export default function Register() {
                 </Box>
                 break;
             case 3:
-
-
                 view = <Box className={classes.context}>
-                    <p>顯示圖片告知使用者成功囉!</p>
+                    <p>註冊成功!</p>
                 </Box>
+                break;
+            default:
                 break;
         }
         return view
@@ -120,9 +120,9 @@ export default function Register() {
             //發送API處理結果 
             axios.post('api/User/Register', user, config)
                 .then(response => {
-                    console.log(response)
+                   
                 })
-            console.log("送出資料")
+                setTimeout("document.location.href = '/'",2000);
         }
         setButtonEnable(oldValues => ({
             ...oldValues,
@@ -194,7 +194,8 @@ export default function Register() {
                     LineID: event.target.value
                 }));
                 break;
-
+            default:
+                break;
         }
     }
 

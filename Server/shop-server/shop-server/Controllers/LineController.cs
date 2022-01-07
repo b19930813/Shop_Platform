@@ -192,7 +192,7 @@ namespace shop_server.Controllers
                         user = _context.Users.Where(u => u.LineID == LT.UserID).FirstOrDefault();
                         var commodityCollection = _context.Commodities.Where(c => c.CommodityId == Convert.ToInt32(CommodityId)).ToList();
                         int Money = commodityCollection.Sum(c => c.Price);
-
+                        BuyList order = _context.BuyLists.Where(o => o.Users.LineID == LT.UserID).Include(o => o.Commodities).FirstOrDefault();
                         _context.BuyLists.Add(new BuyList
                         {
                             Users = user,
@@ -202,6 +202,7 @@ namespace shop_server.Controllers
                             TotalConsume = Money
                         });
                         await _context.SaveChangesAsync();
+                        bot.ReplyMessage(LT.ReplyToken, $"加入購物車成功 , 商品名稱 {commodityCollection[0].Name}");
                     }
                     else
                     {

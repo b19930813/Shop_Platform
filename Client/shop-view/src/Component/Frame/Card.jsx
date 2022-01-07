@@ -66,7 +66,7 @@ export default function RecipeReviewCard(props) {
     }
 
     return (
-        <Card sx={{ maxWidth: 250 }} className={classes.main}>
+        <Card sx={{ width: 250 }} className={classes.main}>
             <CardHeader
                 avatar={
                     <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -79,7 +79,7 @@ export default function RecipeReviewCard(props) {
                     </IconButton>
                 }
                 title={props.Data.Name}
-                subheader="September 14, 2016"
+                subheader="2022年1月7日"
             />
             <CardActionArea>
                 <CardMedia
@@ -90,7 +90,7 @@ export default function RecipeReviewCard(props) {
                 />
                 <CardContent>
                     <Typography variant="body2" color="text.secondary">
-                        This impressive paella is a perfect party dish and a fun meal to cook
+                      歡迎下單
 
                     </Typography>
                 </CardContent>

@@ -96,26 +96,40 @@ namespace shop_server.Controllers
         //public async Task<ActionResult<IEnumerable<Order>>> GetOrderByUserId(int in_UserId)
         public async Task<ActionResult> GetBuyListByUserId(int in_UserId)
         {
-            User user = null;
+        
             List<BuyList> buyLists = null;
             BuyList buyList = null;
             List<Commodity> commoditiesList = null;
             try
             {
-                user = _context.Users.Where(u => u.UserId == in_UserId).Include(u=>u.BuyLists.Commodities).SingleOrDefault();
-                //user = _context.Users.Find(in_UserId);
-                if (user.BuyLists.Commodities.Count != 0)
+                User user = _context.Users.Find(in_UserId);
+                if (user != null)
                 {
-                    //return Ok(new { status = 200, IsSuccess = true, orderList = orderList, commoditiesList = commoditiesList });
-                    //return Ok(new { status = 200, IsSuccess = true, orderList = orderList, commoditiesList = order.Commodities });
-                    //var tmpList =
-                    return Ok(new { status = 200, IsSuccess = true, buyList = user.BuyLists, commoditiesList = user.BuyLists.Commodities });
+                    user = _context.Users.Where(u => u.UserId == in_UserId).Include(u => u.BuyLists).Include(u => u.BuyLists.Commodities).SingleOrDefault();
+                    //user = _context.Users.Find(in_UserId);
+                    if (user.BuyLists.Commodities.Count != 0)
+                    {
+                        //return Ok(new { status = 200, IsSuccess = true, orderList = orderList, commoditiesList = commoditiesList });
+                        //return Ok(new { status = 200, IsSuccess = true, orderList = orderList, commoditiesList = order.Commodities });
+                        //var tmpList =
+                        // return Ok(new { status = 200, IsSuccess = true, buyList = user.BuyLists, commoditiesList = user.BuyLists.Commodities });
+                        return Ok(new { status = 200, IsSuccess = true, message =  user.BuyLists.Commodities.Select(c=>new { 
+                        c.Name , 
+                        c.Price , 
+                        c.Describe,
+                        c.ImagePath
+                        })});
+                    }
+                    else
+                    {
+                        return Ok(new { status = 200, IsSuccess = false, message = "目前購物車是空的喔!" });
+                    }
                 }
                 else
                 {
-                    return Ok(new { status = 200, IsSuccess = false, message = "目前購物車是空的喔!" });
+                    return Ok(new { status = 200, IsSuccess = false, message = "找不到User!" });
                 }
-            }
+            } 
             catch (Exception ex)
             {
                 throw;

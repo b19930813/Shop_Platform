@@ -58,6 +58,28 @@ namespace shop_server.Controllers
             return commodities;
         }
 
+        [Route("Search/{Name}")]
+        [HttpGet]
+        public async Task<ActionResult> Search(string Name)
+        {
+            try
+            {
+                var c = _context.Commodities.Where(c => c.Name == Name).FirstOrDefault();
+                if(c != null)
+                {
+                    return Ok(new { status = 200, IsSuccess = true, message = c.CommodityId });
+                }
+                else
+                {
+                    return Ok(new { status = 200, IsSuccess = false, message = "找不到商品!" });
+                }
+            }
+            catch(Exception ex)
+            {
+                return Ok(new { status = 200, IsSuccess = false, message = "找不到商品!" });
+            }
+        }
+
         [Route("GetStoreAndCommodity/{Id}")]
         [HttpGet]
         public async Task<ActionResult> GetStoreAndCommodity(int id)
