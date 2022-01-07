@@ -62,7 +62,7 @@ namespace shop_server.Controllers
 
 
 
-                 string jsonS = "[{\"type\": \"template\",\"altText\": \"This is a buttons template\",\"template\": {\"type\": \"buttons\",\"thumbnailImageUrl\": \"https://i.imgur.com/YKDNQXU.jpg\",\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"Menu\",\"text\": \"Please select\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/123\"},\"actions\": [{\"type\": \"postback\",\"label\": \"Buy\",\"data\": \"action=buy&itemid=123\"},{\"type\": \"postback\",\"label\": \"Add to cart\",\"data\": \"action=add&itemid=123\"}]}}]";
+                string jsonS = "[{\"type\": \"template\",\"altText\": \"This is a buttons template\",\"template\": {\"type\": \"buttons\",\"thumbnailImageUrl\": \"https://i.imgur.com/YKDNQXU.jpg\",\"imageAspectRatio\": \"rectangle\",\"imageSize\": \"cover\",\"imageBackgroundColor\": \"#FFFFFF\",\"title\": \"Menu\",\"text\": \"Please select\",\"defaultAction\": {\"type\": \"uri\",\"label\": \"View detail\",\"uri\": \"http://example.com/page/123\"},\"actions\": [{\"type\": \"postback\",\"label\": \"Buy\",\"data\": \"action=buy&itemid=123\"},{\"type\": \"postback\",\"label\": \"Add to cart\",\"data\": \"action=add&itemid=123\"}]}}]";
                 //依照用戶說的特定關鍵字來回應
 
                 //先找關鍵字比對，再找包含
@@ -157,7 +157,7 @@ namespace shop_server.Controllers
                         var commodityCollection = _context.Commodities.Where(c => c.CommodityId == Convert.ToInt32(CommodityId)).ToList();
                         int Money = commodityCollection.Sum(c => c.Price);
                         Order order = _context.Orders.Where(o => o.User.LineID == LT.UserID).Include(o => o.Commodities).FirstOrDefault();
-                        if(order == null)
+                        if (order == null)
                         {
                             _context.Orders.Add(new Order
                             {
@@ -192,15 +192,24 @@ namespace shop_server.Controllers
                         user = _context.Users.Where(u => u.LineID == LT.UserID).FirstOrDefault();
                         var commodityCollection = _context.Commodities.Where(c => c.CommodityId == Convert.ToInt32(CommodityId)).ToList();
                         int Money = commodityCollection.Sum(c => c.Price);
-                        BuyList order = _context.BuyLists.Where(o => o.Users.LineID == LT.UserID).Include(o => o.Commodities).FirstOrDefault();
-                        _context.BuyLists.Add(new BuyList
+                        BuyList buyList = _context.BuyLists.Where(o => o.Users.LineID == LT.UserID).Include(o => o.Commodities).FirstOrDefault();
+
+                        if (buyList == null)
                         {
-                            Users = user,
-                            UserId = user.UserId,
-                            CreatedDate = DateTime.Now,
-                            Commodities = commodityCollection,
-                            TotalConsume = Money
-                        });
+                            _context.BuyLists.Add(new BuyList
+                            {
+                                Users = user,
+                                UserId = user.UserId,
+                                CreatedDate = DateTime.Now,
+                                Commodities = commodityCollection,
+                                TotalConsume = Money,
+                            });
+                        }
+                        else
+                        {
+                            buyList.Commodities.Add(commodityCollection[0]);
+                            buyList.TotalConsume += Money;
+                        }
                         await _context.SaveChangesAsync();
                         bot.ReplyMessage(LT.ReplyToken, $"加入購物車成功 , 商品名稱 {commodityCollection[0].Name}");
                     }
@@ -268,7 +277,7 @@ namespace shop_server.Controllers
                         bot.ReplyMessage(LT.ReplyToken, $"暫無優惠商品喔!");
                     }
                 }
-                else if(LT.Message.Contains("GetComm"))
+                else if (LT.Message.Contains("GetComm"))
                 {
                     string GetCommStr = LT.Message;
                     string[] CommArray = GetCommStr.Split(' ');
@@ -286,9 +295,9 @@ namespace shop_server.Controllers
                         bot.ReplyMessage(LT.ReplyToken, "輸入格式不正確");
                     }
                 }
-                else if(LT.Message == "GetState")
+                else if (LT.Message == "GetState")
                 {
-                    bot.ReplyMessage(LT.ReplyToken, "運送中");
+                    bot.ReplyMessage(LT.ReplyToken, "已下單");
                 }
                 else
                 {
