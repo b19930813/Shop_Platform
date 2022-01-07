@@ -50,6 +50,10 @@ namespace shop_server.Model
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.Commodities)
                 .WithOne(c => c.Order);
+
+            modelBuilder.Entity<Commodity>()
+                .HasOne(o => o.Order)
+                .WithMany(c => c.Commodities);
         }
     }
 }

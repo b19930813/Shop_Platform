@@ -144,6 +144,7 @@ export default function Commodity(props) {
             axios.post('api/BuyList/AddBuyList' ,order , config)
             .then(response =>{
                 console.log(response)
+                alert(response.data.message)
             })
         }
         else{
@@ -153,12 +154,21 @@ export default function Commodity(props) {
 
     const handleBuyClick = event => {
         console.log(commodity)
-        // if(loginState.userId != "" && loginState.isLogin){
-            
-        // }
-        // else{
-        //     setOpen(true);
-        // }  
+        if(loginState.userId != "" && loginState.isLogin){
+            var order = ({
+                UserId : loginState.userId,
+                CommmodityId :query.get("CommodityId")
+            })
+
+            axios.post('api/Order/AddOrder' ,order , config)
+            .then(response =>{
+                console.log(response)
+                alert(response.data.message)
+            })
+        }
+        else{
+            setOpen(true);
+        }  
     }
 
     const userCheck = () =>{

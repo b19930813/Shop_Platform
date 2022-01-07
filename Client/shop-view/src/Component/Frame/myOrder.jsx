@@ -54,16 +54,27 @@ export default function OrderList(props) {
     Descrite: "我是滑鼠"
   })
 
+  const [rows, setRows] = React.useState([
+  ])
+
   React.useEffect(() => {
-    axios.get('api/Order', config)
+    axios.get('api/Order/GetOrderByUserId/' + userId, config)
       .then(response => {
         console.log(response)
-        setOrder(oldValues => ({
-          ...oldValues,
-          OrderId: response.data[0].orderId,
-          Status: response.data[0].status,
-          TotalConsume: response.data[0].totalConsume
-        }));
+        // setOrder(oldValues => ({
+        //   ...oldValues,
+        //   OrderId: response.data[0].orderId,
+        //   Status: response.data[0].status,
+        //   TotalConsume: response.data[0].totalConsume
+        // }));
+        var tempData = []
+
+        response.data.forEach(r => {
+          tempData.push(r)
+        });
+        setRows(tempData);
+        console.log("tempData", tempData);
+        console.log("rows", rows);
       })
   }, [])
 

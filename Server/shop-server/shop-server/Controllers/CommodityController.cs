@@ -133,6 +133,44 @@ namespace shop_server.Controllers
             return CreatedAtAction("PostCommodity", new { id = commodity.CommodityId }, commodity);
         }
 
+        [Route("AddCommodity")]
+        [HttpPost]
+        public async Task<ActionResult<Commodity>> AddCommodity([FromBody] object request)
+        {
+            JObject json = JObject.Parse(request.ToString());
+            int StoreId = Convert.ToInt32(json["StoreId"].ToString());
+            string CommodityName = json["Name"].ToString();
+            string CommodityClassification = json["Classification"].ToString();
+            string CommodityDescribe = json["Describe"].ToString();
+            int Price = Convert.ToInt32(json["Price"].ToString());
+            string ImagePath = json["ImagePath"].ToString();
+
+            Store store = _context.Stores.Where(s => s.StoreId == StoreId).Include(s => s.Commodities).FirstOrDefault();
+
+            if (store != null)
+            {
+                _context.Commodities.Add(new Commodity
+                {
+                    Store = store,
+                    Name = CommodityName,
+                    Classification = CommodityClassification,
+                    Describe = CommodityDescribe,
+                    Price = Price,
+                    ImagePath = ImagePath,
+                    TransStoreState = 0,
+                    BuyId = 0,
+                    CreatedDate = DateTime.Now
+                });
+
+                await _context.SaveChangesAsync();
+                return Ok(new { status = 200, IsSuccess = true, message = "加入商品成功!!" });
+            }
+            else
+            {
+                return Ok(new { status = 200, IsSucces = false, message = "發生異常，加入商品失敗" });
+            }
+        }
+
 
         private bool CommodityExists(int CommodityId)
         {

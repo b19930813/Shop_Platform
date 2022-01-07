@@ -109,42 +109,98 @@ namespace shop_server.Controllers
         [HttpPost]
         public async Task<ActionResult> AddOrder([FromBody] object response)
         {
-            //加上Create Date
+            User user = null;
+
             JObject json = JObject.Parse(response.ToString());
-            //User驗證
-            User user = await _context.Users.FindAsync(Convert.ToInt32(json["UserId"]));
-            if (user != null)
+            int UserId = Convert.ToInt32(json["UserId"].ToString());
+            int CommodityId = Convert.ToInt32(json["CommmodityId"].ToString());
+
+            user = _context.Users.Where(u => u.UserId == UserId).FirstOrDefault();
+
+            if (user == null) 
             {
-                Order order = new Order();
-                order.Status = "收到訂單";
-                order.User = user;
-                order.TotalConsume = 500;
-                order.UserId = user.UserId;
-                order.CreatedDate = DateTime.Now;
-                _context.Orders.Add(order);
-                _context.SaveChanges();
-                return Ok(new { status = 200, IsSuccess = true, message = "加入訂單成功" });
+                return Ok(new { status = 200, IsSuccess = false, message = "請先登入!" });
+            }
+
+            var commodityCollection = _context.Commodities.Where(c => c.CommodityId == Convert.ToInt32(CommodityId)).ToList();
+            int Money = commodityCollection.Sum(c => c.Price);
+            Order order = _context.Orders.Where(o => o.User.UserId == UserId).Include(o => o.Commodities).FirstOrDefault();
+
+            if (order == null)
+            {
+                _context.Orders.Add(new Order
+                {
+                    User = user,
+                    UserId = user.UserId,
+                    CreatedDate = DateTime.Now,
+                    Commodities = commodityCollection,
+                    TotalConsume = Money,
+                    Status = "已下單"
+                });
             }
             else
             {
-                return Ok(new { status = 200, IsSuccess = false, message = "加入訂單失敗，User不存在" });
+                order.Commodities.Add(commodityCollection[0]);
+                order.TotalConsume += Money;
             }
+            await _context.SaveChangesAsync();
+            return Ok(new { status = 200, IsSuccess = true, message = "下單成功" });
         }
+
+        //[Route("GetOrderByUserId/{in_UserId}")]
+        //[HttpGet]
+        ////public async Task<ActionResult<IEnumerable<Order>>> GetOrderByUserId(int in_UserId)
+        //public async Task<ActionResult<Order>> GetOrderByUserId(int in_UserId)
+        //{
+        //    User user = _context.Users.Find(in_UserId);
+        //    Order OrderData = await _context.Orders.Where(r => r.User == user).SingleOrDefaultAsync();
+
+        //    if (OrderData == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return OrderData;
+        //}
 
         [Route("GetOrderByUserId/{in_UserId}")]
         [HttpGet]
         //public async Task<ActionResult<IEnumerable<Order>>> GetOrderByUserId(int in_UserId)
-        public async Task<ActionResult<Order>> GetOrderByUserId(int in_UserId)
+        public async Task<ActionResult> GetOrderByUserId(int in_UserId)
         {
-            User user = _context.Users.Find(in_UserId);
-            Order OrderData = await _context.Orders.Where(r => r.User == user).SingleOrDefaultAsync();
-
-            if (OrderData == null)
+            User user = null;
+            List<Order> orderList = null;
+            Order order = null;
+            List<Commodity> commoditiesList = null;
+            try
             {
-                return NotFound();
-            }
+                //user = _context.Users.Where(u => u.UserId == in_UserId).FirstOrDefault();
+                //orderList = await _context.Orders.Where(r => r.User == user).ToListAsync();
+                //order = _context.Orders.Where(o => o.User == user).FirstOrDefault();
 
-            return OrderData;
+                //commoditiesList = _context.Commodities.Where(c => c.Order == order).ToList();
+                commoditiesList = _context.Commodities.Where(c => c.Order.UserId == in_UserId).ToList();
+                //order = user.Order
+                //commoditiesList = await _context.Commodities.Where(c => c.Order.OrderId == user.Order.OrderId).ToListAsync();
+                //commoditiesList = await _context.Commodities.Where(c => c.Order.OrderId == order.OrderId).Include(o=>o.Order).ToListAsync();
+                //commoditiesList = order.Commodities.ToList();
+
+                //if (order.Commodities.Count != 0)
+                if (user.Order.Commodities.Count != 0)
+                {
+                    //return Ok(new { status = 200, IsSuccess = true, orderList = orderList, commoditiesList = commoditiesList });
+                    //return Ok(new { status = 200, IsSuccess = true, orderList = orderList, commoditiesList = order.Commodities });
+                    return Ok(new { status = 200, IsSuccess = true, orderList = user.Order, commoditiesList = user.Order.Commodities });
+                }
+                else
+                {
+                    return Ok(new { status = 200, IsSuccess = false, message = "目前尚無訂單喔!" });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         private bool OrderExists(int OrderId)

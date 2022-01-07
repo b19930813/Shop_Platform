@@ -39,18 +39,15 @@ const useStyles = makeStyles(theme => ({
 export default function AddCommodity(props) {
     const classes = useStyles();
     const inputFile = React.useRef(null);
+    const userName = localStorage.getItem("userName");
+    const storeId = parseInt(localStorage.getItem("storeId"));
     const [commodity, setCommodity] = React.useState({
+        StoreId: storeId,
         Name: "",
         Classification: "",
         Describe: "",
         Price: 0,
-        //ImagePath: null
         ImagePath: "",
-        // TransStoreState: 0,
-        // BuyId: 0,
-        // StroeId: 0,
-        // BuyListBuyId:0,
-        // OrderId:0
     })
 
     const [imageName, setImageName] = React.useState("");
@@ -61,9 +58,11 @@ export default function AddCommodity(props) {
         }
 
         console.log(commodity)
-        axios.post('api/Commodity', commodity, config)
+        axios.post('api/Commodity/AddCommodity', commodity, config)
             .then(response => {
                 console.log(response)
+                alert(response.data.message);
+                window.close();
             })
     }
 
@@ -79,8 +78,8 @@ export default function AddCommodity(props) {
             setCommodity(oldValues => ({
                 ...oldValues,
                 //ImagePath: files
-                //ImagePath: files[0].name
-                ImagePath: files[0].name.substring(0,files[0].name.indexOf("."))
+                ImagePath: "https://i.imgur.com/" + files[0].name
+                //ImagePath: files[0].name.substring(0, files[0].name.indexOf("."))
             }))
             setImageName(files[0].name)
         }
@@ -110,7 +109,7 @@ export default function AddCommodity(props) {
             case "Price":
                 setCommodity(oldValues => ({
                     ...oldValues,
-                    Price: event.target.value
+                    Price: parseInt(event.target.value)
                 }))
                 break;
             case "ImagePath":
@@ -129,7 +128,7 @@ export default function AddCommodity(props) {
     return (
         <div>
             <Box className={classes.context}>
-                <h1>加入商品 - {`${props.data}的商店`}</h1>
+                <h1>加入商品 - {`${userName}的商店`}</h1>
                 <TextField id="Name" label="商品名稱" variant="outlined" fullWidth onChange={handleTextChange} />
                 <TextField id="Classification" label="商品分類" variant="outlined" fullWidth style={{ "margin-top": "2%" }} onChange={handleTextChange} />
                 <TextField id="Price" label="價格" variant="outlined" fullWidth style={{ "margin-top": "2%" }} onChange={handleTextChange} />

@@ -34,6 +34,21 @@ export default function BuyList() {
   const [rows, setRows] = React.useState([
   ])
 
+  React.useEffect(() => {
+    axios.get('api/BuyList/GetBuyListByUserId/' + userId, config)
+      .then(response => {
+        console.log(response)
+        var tempData = []
+
+        response.data.forEach(r => {
+          tempData.push(r)
+        });
+        setRows(tempData);
+        console.log("tempData", tempData);
+        console.log("rows", rows);
+      })
+  }, [])
+
   return (
     <div className={classes.context}>
       <h1>{`${userName}的購買清單`}</h1>
@@ -44,25 +59,37 @@ export default function BuyList() {
             aria-controls="panel1bh-content"
             id="panel1bh-header"
           >
-            <Typography sx={{ width: '33%', flexShrink: 0 }}>
-              {`商品名稱 : ${row.name}`}
-            </Typography>
-            <Typography sx={{ width: '33%', flexShrink: 0 }}>{`商品價格 : ${row.price} 元`}</Typography>
-            <Typography sx={{ width: '33%', flexShrink: 0 }}>{`庫存數量 : ${row.count}`}</Typography>
+            <Typography sx={{ width: '33%', flexShrink: 0 }}>{`總價格 : ${row.price} 元`}</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Typography>
-              <div className={classes.Text}>
-                <p>{`商品敘述 : ${row.describe}`}</p>
+              <div className={classes.commContext} >
+                <img src={`https://localhost:44387/api/User/getImage/${row.ImagePath}`} style={{ "width": "150px", "height": "150px" }} />
               </div>
-              <div className={classes.imageClass}>
-                <img src={`https://localhost:44387/api/User/getImage/${row.imagePath}`} style={{ "width": "150px", "height": "150px" }} />
+              <div className={classes.desc}>
+                <div style={{ "border:": "2px #DCDCDC solid" }}>
+                  {`商品名稱 : ${row.Name}`}
+                </div>
               </div>
-
+              <div className={classes.desc}>
+                <div style={{ "border:": "2px #DCDCDC solid" }}>
+                  {`商品描述 : ${row.Descrite}`}
+                </div>
+              </div>
+              <div className={classes.desc}>
+                <div style={{ "border:": "2px #DCDCDC solid" }}>
+                  {`數量 : ${row.Count}`}
+                </div>
+              </div>
+              <div className={classes.desc}>
+                <div style={{ "border:": "2px #DCDCDC solid" }}>
+                  {`商品金額 : ${row.Count * row.Price}`}
+                </div>
+              </div>
             </Typography>
           </AccordionDetails>
         </Accordion>
-        ))}
+      ))}
       <Stack spacing={2}>
         <Pagination count={10} color="secondary" className={classes.pageCenter} />
       </Stack>

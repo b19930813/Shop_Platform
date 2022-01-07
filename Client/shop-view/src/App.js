@@ -15,6 +15,7 @@ import Main from './Component/Frame/main'
 import axios from 'axios';
 import { config } from './api/config'
 import AddCommodity from './Component/Frame/AddCommodity'
+import CreateStore from './Component/Frame/CreateStore'
 import Temp from './Component/Frame/temp'
 
 import Commodity from './Component/Frame/Commodity';
@@ -41,6 +42,7 @@ class App extends Component {
             <Route path='/Register' element={<Register />} />
             <Route path='/Test' element={<Test />} />
             <Route path='/AddCommodity' element={<AddCommodity />} />
+            <Route path='/CreateStore' element={<CreateStore />} />
             <Route path='/temp' element={<Temp />} />
             <Route path='/Commodity' element={<Commodity />} />
           </Routes  >

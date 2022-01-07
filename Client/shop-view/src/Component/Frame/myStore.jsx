@@ -39,7 +39,6 @@ function createData(Name, Desc, Count, Price, Image) {
 export default function ControlledAccordions() {
   const [expanded, setExpanded] = React.useState(false);
   const classes = useStyles();
-  //const userId = parseInt(localStorage.getItem("userId"));
   const storeId = parseInt(localStorage.getItem("storeId"));
   const userName = localStorage.getItem("userName");
   const handleChange = (panel) => (event, isExpanded) => {
@@ -50,14 +49,9 @@ export default function ControlledAccordions() {
     window.open('/AddCommodity')
   }
 
-  // const [user, setUser] = React.useState({
-  //   Account: "",
-  //   Password: "",
-  //   Name: "",
-  //   Phone: "",
-  //   Address: "",
-  //   LineID: ""
-  // });
+  const handleCreateStoreClick = () => {
+    window.open('/CreateStore')
+  }
 
   const [commodity, setCommodity] = React.useState({
     Name: "",
@@ -71,81 +65,30 @@ export default function ControlledAccordions() {
   ])
 
   React.useEffect(() => {
-    // axios.get('api/User/' + userId, config)
-    //   .then(response => {
-    //     console.log(response)
-    //     setUser(oldValues => ({
-    //       ...oldValues,
-    //       Name: response.data.name,
-    //     }));
-    //   })
+    if (storeId=="")
+    {
+      return;
+    }
 
     axios.get('api/Store/GetCommodityByStoreId/' + storeId, config)
       .then(response => {
         console.log(response)
-        // setCommodity(oldValues => ({
-        //   ...oldValues,
-        //   Name: response.data.commodityName,
-        //   Desc: response.data.commodityDesc,
-        //   Count: response.data.count,
-        //   Price: response.data.commodityPrice,
-        //   Image: response.data.commodityImage
-        // }));
         var tempData = []
 
         response.data.forEach(r => {
           tempData.push(r)
-          //rows.push(r);
-          //tempData.push(createData(r.Name,r.Desc,r.Count,r.Price,r.Image))
         });
         setRows(tempData);
-        //rows.push(tempData);
         console.log("tempData", tempData);
         console.log("rows", rows);
       })
   }, [])
 
-  // return (
-  //   <div className={classes.context}>
-  //     <div>
-  //       <h1 style={{ 'display': 'inline-block' }}>{`${userName}的商店`}</h1>
-  //       <Button color="warning" variant="contained" style={{ 'float': 'right', 'marginTop': '3%' }} onClick={handleAddClick} >加入商品</Button>
-  //     </div>
-
-  //     <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-  //       <AccordionSummary
-  //         expandIcon={<ExpandMoreIcon />}
-  //         aria-controls="panel1bh-content"
-  //         id="panel1bh-header"
-  //       >
-  //         <Typography sx={{ width: '33%', flexShrink: 0 }}>
-  //           {`商品名稱 : ${commodity.Name}`}
-  //         </Typography>
-  //         <Typography sx={{ width: '33%', flexShrink: 0 }}>{`商品價格 : ${commodity.Price} 元`}</Typography>
-  //         <Typography sx={{ width: '33%', flexShrink: 0 }}>{`庫存數量 : ${commodity.Count}`}</Typography>
-  //       </AccordionSummary>
-  //       <AccordionDetails>
-  //         <Typography>
-  //           <div className={classes.Text}>
-  //             <p>{`商品敘述 : ${commodity.Desc}`}</p>
-  //           </div>
-  //           <div className={classes.imageClass}>
-  //             {/* <img src="https://localhost:44387/api/User/getImage/1" className={classes.imageClass} /> */}
-  //             <img src={`https://localhost:44387/api/User/getImage/${commodity.Image}`} style={{ "width": "150px", "height": "150px" }} />
-  //           </div>
-
-  //         </Typography>
-  //       </AccordionDetails>
-  //     </Accordion>
-  //     <Stack spacing={2}>
-  //       <Pagination count={10} color="secondary" className={classes.pageCenter} />
-  //     </Stack>
-  //   </div>
-  // );
   return (
     <div className={classes.context}>
       <div>
         <h1 style={{ 'display': 'inline-block' }}>{`${userName}的商店`}</h1>
+        <Button color="warning" variant="contained" style={{ 'float': 'right', 'marginTop': '3%' }} onClick={handleCreateStoreClick} >建立賣場</Button>
         <Button color="warning" variant="contained" style={{ 'float': 'right', 'marginTop': '3%' }} onClick={handleAddClick} >加入商品</Button>
       </div>
       {rows.map((row) => (
@@ -159,7 +102,7 @@ export default function ControlledAccordions() {
               {`商品名稱 : ${row.name}`}
             </Typography>
             <Typography sx={{ width: '33%', flexShrink: 0 }}>{`商品價格 : ${row.price} 元`}</Typography>
-            <Typography sx={{ width: '33%', flexShrink: 0 }}>{`庫存數量 : ${row.count}`}</Typography>
+            <Typography sx={{ width: '33%', flexShrink: 0 }}>{`庫存數量 : 1`}</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Typography>

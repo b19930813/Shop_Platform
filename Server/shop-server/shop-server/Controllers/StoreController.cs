@@ -101,6 +101,43 @@ namespace shop_server.Controllers
             return CreatedAtAction("PostStore", new { id = store.StoreId }, store);
         }
 
+        [Route("CreateStore")]
+        [HttpPost]
+        public async Task<ActionResult> CreateStore([FromBody] object request)
+        {
+            JObject json = JObject.Parse(request.ToString());
+            int UserId = Convert.ToInt32(json["UserId"].ToString());
+            string StoreName = json["Name"].ToString();
+            string StoreClassification = json["Classification"].ToString();
+            string StoreDescribe = json["Describe"].ToString();
+
+            User user = _context.Users.Where(u => u.UserId == UserId).Include(u => u.Stores).FirstOrDefault();
+
+            if (user != null)
+            {
+                _context.Stores.Add(new Store
+                {
+                    User = user,
+                    UserId = user.UserId,
+                    Name = StoreName,
+                    Classification = StoreClassification,
+                    Describe = StoreDescribe,
+                    Subscription = 0,
+                    GoodEvaluation = 0,
+                    BadEvaluation = 0,
+                    NormalEvaluation = 0,
+                    CreatedDate = DateTime.Now
+                });
+
+                await _context.SaveChangesAsync();
+                return Ok(new { status = 200, IsSuccess = true, message = "創建賣場成功!!"});
+            }
+            else
+            {
+                return Ok(new { status = 200, IsSucces = false, message = "發生異常，創建失敗" });
+            }
+        }
+
         [Route("GetStoreByUserId/{UserId}")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Store>>> GetStoreByUserId(int UserId)
